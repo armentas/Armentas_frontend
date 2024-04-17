@@ -5,7 +5,7 @@ export interface Product {
     description?: string;
     type?: string;
     brand?: string;
-    collection?: any[];
+    collection?: string[];
     category?: string;
     price?: number;
     sale?: boolean;
@@ -13,7 +13,7 @@ export interface Product {
     stock?: number;
     new?: boolean;
     quantity?: number;
-    tags?: any[];
+    tags?: string[];
     variants?: Variants[];
     images?: Images[];
 }
@@ -28,9 +28,11 @@ export interface Variants {
 }
 
 export interface Images {
-    image_id?: number;
     id?: number;
-    alt?: string;
+    id_product?: number;
+    img_key?: string;
     src?: string;
-    variant_id?: any[];
+    img_url?: string;
+    img_url2?: string;
+    alt?: string;
 }

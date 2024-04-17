@@ -11,12 +11,23 @@ import { ProductService } from '../../shared/services/product.service';
 export class HomeMainComponent implements OnInit {
 
   public products: Product[] = [];
+  public specialsProducts: Product[] = [];
   public ProductSliderConfig: any = ProductSlider;
 
   constructor(public productService: ProductService) {
-    this.productService.getProducts.subscribe(response => 
-      this.products = response.filter(item => item.type == 'pinata' || item.type == 'piggy_bank')
-    );
+    this.productService.getProducts.subscribe(response => {
+      this.products = response.filter(item => item.type == 'Piñata' || item.type == 'Piggy bank')
+      this.specialsProducts = response.filter(item => {
+        const lowercaseTags = item.tags.map(tag => tag.toLowerCase());
+        return lowercaseTags.includes('special') || lowercaseTags.includes('especial');
+      });
+
+      console.log(this.products);
+      console.log(this.specialsProducts);
+    });
+
+
+
   }
 
   // Sliders
@@ -31,29 +42,6 @@ export class HomeMainComponent implements OnInit {
     color: '#000000',
     image: 'assets/images/slider/alcancias.png'
   }];
-
-  // Blogs
-  public blogs = [{
-    image: 'assets/images/blog/6.jpg',
-    date: '25 January 2018',
-    title: 'Lorem ipsum dolor sit consectetur adipiscing elit,',
-    by: 'John Dio'
-  }, {
-    image: 'assets/images/blog/7.jpg',
-    date: '26 January 2018',
-    title: 'Lorem ipsum dolor sit consectetur adipiscing elit,',
-    by: 'John Dio'
-  }, {
-    image: 'assets/images/blog/8.jpg',
-    date: '27 January 2018',
-    title: 'Lorem ipsum dolor sit consectetur adipiscing elit,',
-    by: 'John Dio'
-  }, {
-    image: 'assets/images/blog/9.jpg',
-    date: '28 January 2018',
-    title: 'Lorem ipsum dolor sit consectetur adipiscing elit,',
-    by: 'John Dio'
-  }]
 
   ngOnInit(): void {
   }

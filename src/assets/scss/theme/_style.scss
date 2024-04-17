@@ -2471,6 +2471,7 @@ header {
 
 .product-box .img-wrapper .product-thumb-list li img,
 .product-wrap .img-wrapper .product-thumb-list li img {
+    height: auto;
     width: 45px;
 }
 
@@ -3531,7 +3532,7 @@ header {
     }
     .offer-slider {
         img {
-            height: 160px;
+            height: 350px;
             padding: 15px 15px 15px 0 !important;
         }
         >div {
@@ -9468,6 +9469,7 @@ body.rtl {
         left: unset;
         right: 0;
     }
+
     .j-box {
         .product-box {
             .cart-info {

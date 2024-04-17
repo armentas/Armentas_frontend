@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from, lastValueFrom } from 'rxjs';
 import { map, startWith, delay } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from '../classes/product';
+import { environment } from 'src/environments/environment';
 
 const state = {
   products: JSON.parse(localStorage['products'] || '[]'),
@@ -31,25 +32,51 @@ export class ProductService {
   */
 
   // Product
-  private get products(): Observable<Product[]> {
-    this.Products = this.http.get<Product[]>('assets/data/products.json').pipe(map(data => data));
-    this.Products.subscribe(next => { localStorage['products'] = JSON.stringify(next) });
-    return this.Products = this.Products.pipe(startWith(JSON.parse(localStorage['products'] || '[]')));
+  private async products(): Promise<any[]> {
+    try {
+      const response = await lastValueFrom(this.http.get<{ data: any[] }>(`${environment.baseUrl}/products/getAllFullProduct`));
+      const products = response.data.filter(prod => {
+        return prod.sale !== false;
+      }).map( data => {
+        return {
+          ...data,
+          new: this.isWithinFiveDays(data.created_date)
+        }
+      })      
+      localStorage['products'] = JSON.stringify(products);
+  
+      return products;
+    } catch (error) {
+      // Manejar errores aquí según tus necesidades
+      console.error('Error al obtener productos:', error);
+      throw error;
+    }
   }
 
-  // Get Products
   public get getProducts(): Observable<Product[]> {
-    return this.products;
+    return from(this.products());
   }
 
   // Get Products By Slug
-  public getProductBySlug(slug: string): Observable<Product> {
-    return this.products.pipe(map(items => { 
+  public getProductBySlug(slug: string): Observable<Product | undefined> {
+    const codePart = slug.split('-').pop();
+    
+    return  from(this.products()).pipe(map(items => { 
       return items.find((item: any) => { 
-        return item.title.replace(' ', '-') === slug; 
+        return item.sku === codePart; 
       }); 
     }));
   }
+
+  private isWithinFiveDays(dateString: string): boolean {
+    const date = new Date(dateString);
+    const currentDate = new Date();
+
+    const differenceInMs = currentDate.getTime() - date.getTime();
+    const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
+
+    return differenceInDays < 5;
+}
 
 
   /*
@@ -217,8 +244,8 @@ export class ProductService {
 
   // Get Product Filter
   public filterProducts(filter: any): Observable<Product[]> {
-    return this.products.pipe(map(product => 
-      product.filter((item: Product) => {
+    return from(this.products()).pipe(map(product => 
+      product.filter((item: any) => {
         if (!filter.length) return true
         const Tags = filter.some((prev) => { // Match Tags
           if (item.tags) {

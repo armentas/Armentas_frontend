@@ -2,11 +2,7 @@
 
 <!-- Home slider start-->
 <section class="p-0">
-  <app-slider 
-    [sliders]="sliders" 
-    [textClass]="'text-center'"
-    [category]="'vegetables'"
-    [buttonText]="'shop now'"> 
+  <app-slider [sliders]="sliders" [textClass]="'text-center'" [category]="'vegetables'" [buttonText]="'shop now'">
   </app-slider>
 </section>
 <!-- Home slider End -->
@@ -23,109 +19,102 @@
 
 <!-- product section -->
 <section class="section-b-space">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="title4">
-                    <h2 class="title-inner4">trending products</h2>
-                    <div class="line">
-                        <span></span>
-                    </div>
-                </div>
-                <owl-carousel-o class="product-5 product-m no-arrow" [options]="ProductSliderConfig">
-                  <ng-container *ngFor="let product of products ">
-                    <ng-template carouselSlide>
-                      <div class="product-box product-wrap">
-                          <app-product-box-two 
-                            [product]="product"
-                            [currency]="productService?.Currency">    
-                          </app-product-box-two>
-                      </div>
-                    </ng-template>
-                  </ng-container>
-                </owl-carousel-o>
-            </div>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="title4">
+          <h2 class="title-inner4">trending products</h2>
+          <div class="line">
+            <span></span>
+          </div>
         </div>
+        <owl-carousel-o class="product-5 product-m no-arrow" [options]="ProductSliderConfig">
+          <ng-container *ngFor="let product of products ">
+            <ng-template carouselSlide>
+              <div class="product-box product-wrap">
+                <app-product-box-two [product]="product" [currency]="productService?.Currency">
+                </app-product-box-two>
+              </div>
+            </ng-template>
+          </ng-container>
+        </owl-carousel-o>
+      </div>
     </div>
+  </div>
 </section>
 <!-- product section end -->
 
 <!-- Parallax banner -->
 <section class="p-0">
-    <div class="full-banner parallax-banner15 parallax text-start p-left"
-        [ngStyle]="{'background-image': 'url(assets/images/parallax/11.jpg)'}">
+  <div class="full-banner parallax-banner15 parallax text-start p-left"
+    [ngStyle]="{'background-image': 'url(assets/images/parallax/11.jpg)'}">
     <!-- <div class="full-banner parallax-banner15 parallax text-start p-left"
         [ngStyle]="{'background-image': 'url(https://img.freepik.com/foto-gratis/hermosa-decoracion-fiesta-mexicana-comida_23-2149317294.jpg?w=1380&t=st=1705518468~exp=1705519068~hmac=ad147558319e516a21114cabde1fddc2be6c4ca2e3251855b2e947d429a72d08)'}"> -->
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <div class="banner-contain">
-                        <h2>2018</h2>
-                        <h3>food market</h3>
-                        <h4>special offer</h4>
-                    </div>
-                </div>
-            </div>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="banner-contain">
+            <h2>2018</h2>
+            <h3>food market</h3>
+            <h4>special offer</h4>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </section>
 <!-- Parallax banner end -->
 
 <!-- product-box slider -->
 <section>
   <div class="full-box">
-      <div class="container">
-          <div class="title4">
-              <h2 class="title-inner4">special products</h2>
-              <div class="line">
-                  <span></span>
-              </div>
-          </div>
-          <div class="row">
-              <div class="col-md-4">
-                  <div class="theme-card center-align">
-                      <div class="offer-slider">
-                          <div class="sec-1">
-                              <div class="product-box2" *ngFor="let product of products | slice:1:3">
-                                <app-product-box-vertical 
-                                  [product]="product"
-                                  [currency]="productService?.Currency">    
-                                </app-product-box-vertical>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-4 center-slider">
-                  <div>
-                      <div class="offer-slider">
-                          <div>
-                              <div class="product-box product-wrap" *ngFor="let product of products | slice:5:6">
-                                <app-product-box-two 
-                                  [product]="product"
-                                  [currency]="productService?.Currency">    
-                                </app-product-box-two>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-4">
-                  <div class="theme-card center-align">
-                      <div class="offer-slider">
-                          <div class="sec-1">
-                              <div class="product-box2" *ngFor="let product of products | slice:3:5">
-                                <app-product-box-vertical 
-                                  [product]="product"
-                                  [currency]="productService?.Currency">    
-                                </app-product-box-vertical>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
+    <div class="container">
+      <div class="title4">
+        <h2 class="title-inner4">special products</h2>
+        <div class="line">
+          <span></span>
+        </div>
       </div>
+      <div class="row mb-5">
+        <div class="col-md-4">
+          <div class="theme-card center-align">
+            <div class="offer-slider">
+              <div class="d-flex flex-column gap-3">
+                <div class="product-box" *ngFor="let product of specialsProducts | slice:1:3">
+                  <app-product-box-one [product]="product" [currency]="productService?.Currency" [thumbnail]="true"
+                    [cartModal]="true">
+                  </app-product-box-one>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 center-slider">
+          <div>
+            <div class="offer-slider">
+              <div class="d-flex flex-column justify-content-center">
+                <div class="product-box" *ngFor="let product of specialsProducts | slice:5:6">
+                  <app-product-box-two [product]="product" [currency]="productService?.Currency">
+                  </app-product-box-two>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="theme-card center-align">
+            <div class="offer-slider">
+              <div class="d-flex flex-column gap-3">
+                <div class="product-box" *ngFor="let product of specialsProducts | slice:3:5">
+                  <app-product-box-one [product]="product" [currency]="productService?.Currency" [thumbnail]="true">
+                  </app-product-box-one>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 <!-- product-box slider end -->
@@ -151,5 +140,5 @@
 <!-- blog section end -->
 
 <!-- Cart Open To Right Side-->
-<app-cart-variation [direction]="'right'"></app-cart-variation> 
+<app-cart-variation [direction]="'right'"></app-cart-variation>
 <app-footer-one></app-footer-one>
