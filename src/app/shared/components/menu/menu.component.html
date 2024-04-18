@@ -51,7 +51,7 @@
               <span class="sub-arrow" *ngIf="childrenItem.children"></span>
             </a>
             <!-- Link -->
-            <a [routerLink]="childrenItem.path" [queryParams]="{ category: childrenItem.param }" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" 
+            <a [routerLink]="childrenItem.path" [queryParams]="{ type: childrenItem.param }" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" 
               *ngIf="childrenItem.type === 'link' ">
               {{ childrenItem.title | translate }}
               <span class="new-tag" *ngIf="childrenItem.badge">{{ childrenItem.badgeText | translate }}</span>

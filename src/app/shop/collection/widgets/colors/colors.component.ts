@@ -21,15 +21,15 @@ export class ColorsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  get filterbycolor() {
+  get filterbyColor() {
     const uniqueColors = []
     this.products.filter((product) => {
-      product.variants.filter((variant) => {
-        if (variant.color) {
-          const index = uniqueColors.indexOf(variant.color)
-          if (index === -1) uniqueColors.push(variant.color)
-        }
-      })
+      if(product.colors){
+        product.colors.split(',').forEach( color => {
+          const index = uniqueColors.indexOf(color)
+            if (index === -1) uniqueColors.push(color)
+        })
+      }
     })
     return uniqueColors
   }

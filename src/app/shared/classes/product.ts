@@ -4,10 +4,12 @@ export interface Product {
     title?: string;
     description?: string;
     type?: string;
+    sku?: string;
     brand?: string;
     collection?: string[];
     category?: string;
     price?: number;
+    colors?: string;
     sale?: boolean;
     discount?: number;
     stock?: number;

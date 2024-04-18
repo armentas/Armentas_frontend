@@ -62,11 +62,9 @@ export class NavService {
 		},
 		{
 			title: 'Shop', type: 'sub', active: false, children: [
-				{ path: '/shop/collection/left/sidebar', title: 'Piñatas', param: 'pinata', type: 'link' },
-				{ path: '/shop/collection/left/sidebar', title: 'Piggy bank', param: 'piggy_bank', type: 'link' }
-				// { path: '/shop/collection/right/sidebar', title: 'right-sidebar', type: 'link' },
-				// { path: '/shop/collection/no/sidebar', title: 'no-sidebar', type: 'link' },
-				// { path: '/shop/collection/infinitescroll', title: 'Infinite Scroll', type: 'link' }
+				{ path: '/shop/collection/left/sidebar', title: 'Piñatas', param: 'Piñata', type: 'link' },
+				{ path: '/shop/collection/left/sidebar', title: 'Piggy bank', param: 'Piggy bank', type: 'link' },
+				{ path: '/shop/collection/left/sidebar', title: 'All', param: 'All', type: 'link' }
 			]
 		},
 		{ 

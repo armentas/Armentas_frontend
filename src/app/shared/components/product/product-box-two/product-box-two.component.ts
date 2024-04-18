@@ -49,6 +49,12 @@ export class ProductBoxTwoComponent implements OnInit {
   //   })
   // }
 
+  getProductRoute(product: Product): string {
+    const cleanedTitle = product.title.replace(/ /g, '-').trim();
+    const code = product.sku || ''; // Asegurándonos de que code tenga un valor
+    return `/shop/product/right/sidebar/${cleanedTitle}-${code}`;
+  }
+
   ChangeVariantsImage(src) {
     this.ImageSrc = src;
   }

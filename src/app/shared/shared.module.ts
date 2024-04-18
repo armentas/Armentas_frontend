@@ -23,7 +23,7 @@ import { FooterFourComponent } from './footer/footer-four/footer-four.component'
 import { LeftMenuComponent } from './components/left-menu/left-menu.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { SettingsComponent } from './components/settings/settings.component';
-import { CategoriesComponent } from './components/categories/categories.component';
+import { TypesComponent } from './components/types/types.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { ProductBoxOneComponent } from './components/product/product-box-one/product-box-one.component';
 import { ProductBoxTwoComponent } from './components/product/product-box-two/product-box-two.component';
@@ -67,7 +67,7 @@ import { DiscountPipe } from './pipes/discount.pipe';
     MenuComponent,
     SettingsComponent,
     BreadcrumbComponent,
-    CategoriesComponent,
+    TypesComponent,
     ProductBoxOneComponent,
     ProductBoxTwoComponent,
     ProductBoxThreeComponent,
@@ -117,7 +117,7 @@ import { DiscountPipe } from './pipes/discount.pipe';
     HeaderFourComponent,
     FooterFourComponent,
     BreadcrumbComponent,
-    CategoriesComponent,
+    TypesComponent,
     ProductBoxOneComponent,
     ProductBoxTwoComponent,
     ProductBoxThreeComponent,

@@ -4,6 +4,7 @@ import { ProductDetailsMainSlider, ProductDetailsThumbSlider } from '../../../..
 import { Product } from '../../../../shared/classes/product';
 import { ProductService } from '../../../../shared/services/product.service';
 import { SizeModalComponent } from "../../../../shared/components/modal/size-modal/size-modal.component";
+import { log } from 'console';
 
 @Component({
   selector: 'app-product-left-sidebar',
@@ -12,6 +13,7 @@ import { SizeModalComponent } from "../../../../shared/components/modal/size-mod
 })
 export class ProductLeftSidebarComponent implements OnInit {
 
+  public products: Product[];
   public product: Product = {};
   public counter: number = 1;
   public activeSlide: any = 0;
@@ -26,38 +28,46 @@ export class ProductLeftSidebarComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private router: Router,
     public productService: ProductService) {
-    this.route.data.subscribe(response => this.product = response.data);
+      this.products = JSON.parse(localStorage.getItem('products'));
   }
 
   ngOnInit(): void {
-    console.log("dddd", this.product)
+    this.route.paramMap.subscribe(response => {
+      const prod = this.products.find(p => {
+        return p.sku == response.get('slug').toString().split('-').pop();
+    } );
+
+      this.product = prod;
+      console.log(this.product);
+      
+    });
   }
 
   // Get Product Color
-  Color(variants) {
-    const uniqColor = []
-    for (let i = 0; i < Object.keys(variants).length; i++) {
-      if (uniqColor.indexOf(variants[i].color) === -1 && variants[i].color) {
-        uniqColor.push(variants[i].color)
-      }
-    }
-    return uniqColor
-  }
+  // Color(variants) {
+  //   const uniqColor = []
+  //   for (let i = 0; i < Object.keys(variants).length; i++) {
+  //     if (uniqColor.indexOf(variants[i].color) === -1 && variants[i].color) {
+  //       uniqColor.push(variants[i].color)
+  //     }
+  //   }
+  //   return uniqColor
+  // }
 
   // Get Product Size
-  Size(variants) {
-    const uniqSize = []
-    for (let i = 0; i < Object.keys(variants).length; i++) {
-      if (uniqSize.indexOf(variants[i].size) === -1 && variants[i].size) {
-        uniqSize.push(variants[i].size)
-      }
-    }
-    return uniqSize
-  }
+  // Size(variants) {
+  //   const uniqSize = []
+  //   for (let i = 0; i < Object.keys(variants).length; i++) {
+  //     if (uniqSize.indexOf(variants[i].size) === -1 && variants[i].size) {
+  //       uniqSize.push(variants[i].size)
+  //     }
+  //   }
+  //   return uniqSize
+  // }
 
-  selectSize(size) {
-    this.selectedSize = size;
-  }
+  // selectSize(size) {
+  //   this.selectedSize = size;
+  // }
 
   // Increament
   increment() {

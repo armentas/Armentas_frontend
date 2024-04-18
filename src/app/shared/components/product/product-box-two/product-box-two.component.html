@@ -4,7 +4,7 @@
 		<span class="lable4" *ngIf='product.sale'>on sale</span>
 	</div>
 	<div class="front">
-        <a [routerLink]="['/shop/product/left/sidebar/', product.title.replace(' ', '-')]">
+        <a [routerLink]="getProductRoute(product)">
             <img [defaultImage]="ImageSrc ? ImageSrc : 'assets/images/product/placeholder.jpg'" 
                  [lazyLoad]="ImageSrc ? ImageSrc : product.images[0].img_url" 
                  class="img-fluid lazy-loading" style="height: 350px; width: auto;" alt="">

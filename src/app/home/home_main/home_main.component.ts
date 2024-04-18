@@ -21,9 +21,6 @@ export class HomeMainComponent implements OnInit {
         const lowercaseTags = item.tags.map(tag => tag.toLowerCase());
         return lowercaseTags.includes('special') || lowercaseTags.includes('especial');
       });
-
-      console.log(this.products);
-      console.log(this.specialsProducts);
     });
 
 
