@@ -1,9 +1,56 @@
-<app-header-three></app-header-three>
+<!-- <app-header-three></app-header-three> -->
+<app-header-one [class]="'header-tools'"></app-header-one>
 
 <!-- Home slider start-->
-<section class="p-0">
-  <app-slider [sliders]="sliders" [textClass]="'text-center'" [category]="'vegetables'" [buttonText]="'shop now'">
-  </app-slider>
+<section class="p-0 height-85 tools_slider"
+  [ngStyle]="{'background-image': 'url(assets/images/slider/22-1.jpg)', 'background-size': 'cover'}">
+  <owl-carousel-o [options]="HomeSliderConfig" class="home-slider">
+    <ng-template carouselSlide>
+      <div class="home text-center">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <div class="slider-contain">
+                <div>
+                  <h4>welcome to Armentas</h4>
+                  <h1>Piñatas</h1>
+                  <a [routerLink]="['/shop/collection/left/sidebar']" [queryParams]="{ type: 'Piñata'}"
+                    class="btn btn-solid">shop now</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tools-parts" id="tools-move">
+            <img src="assets/images/pinata3D-2.png" style="width: 300px;" class="img-fluid floating2" alt="">
+          </div>
+          <div class="tools-parts1" id="tools-move1">
+            <img src="assets/images/pinata3D-1.png" style="width: 350px;" class="img-fluid floating" alt="">
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template carouselSlide>
+      <div class="home text-center">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <div class="slider-contain">
+                <div>
+                  <h4>welcome to Armentas</h4>
+                  <h1>Piggy bank</h1>
+                  <a [routerLink]="['/shop/collection/left/sidebar']" [queryParams]="{ type: 'Piggy bank'}"
+                    class="btn btn-solid">shop now</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tools-parts" id="tools-move2">
+            <img src="assets/images/piggy-bank3D.png" style="width: 350px;" class="img-fluid floating" alt="">
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </owl-carousel-o>
 </section>
 <!-- Home slider End -->
 
@@ -19,7 +66,7 @@
 
 <!-- product section -->
 <section class="section-b-space">
-  <div class="container">
+  <div class="container2">
     <div class="row">
       <div class="col">
         <div class="title4">
@@ -47,16 +94,16 @@
 <!-- Parallax banner -->
 <section class="p-0">
   <div class="full-banner parallax-banner15 parallax text-start p-left"
-    [ngStyle]="{'background-image': 'url(assets/images/parallax/11.jpg)'}">
-    <!-- <div class="full-banner parallax-banner15 parallax text-start p-left"
-        [ngStyle]="{'background-image': 'url(https://img.freepik.com/foto-gratis/hermosa-decoracion-fiesta-mexicana-comida_23-2149317294.jpg?w=1380&t=st=1705518468~exp=1705519068~hmac=ad147558319e516a21114cabde1fddc2be6c4ca2e3251855b2e947d429a72d08)'}"> -->
+    [ngStyle]="{'background-image': 'url(assets/images/parallax/parallax.jpg)'}">
     <div class="container">
       <div class="row">
         <div class="col">
-          <div class="banner-contain">
-            <h2>2018</h2>
-            <h3>food market</h3>
-            <h4>special offer</h4>
+          <div class="banner-contain d-flex flex-column align-items-center gap-3">
+            <h5>SPECIAL OFFER FOR YOU</h5>
+            <h4>we understand that every customer has unique needs. Whether you're looking to
+              customize a product to fit your specific requirements or you're interested in purchasing large quantities
+              at a discounted rate, we're here to help.</h4>
+            <a [routerLink]="['/pages/contact']" class="btn btn-solid">Get in Touch</a>
           </div>
         </div>
       </div>
@@ -89,13 +136,14 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 center-slider">
+        <div class="col-md-4">
           <div class="theme-card center-align">
             <div class="offer-slider">
-              <div class="d-flex flex-column">
-                <div class="product-box" *ngFor="let product of specialsProducts | slice:5:6">
-                  <app-product-box-two [product]="product" [currency]="productService?.Currency">
-                  </app-product-box-two>
+              <div class="d-flex flex-column gap-3">
+                <div class="product-box" *ngFor="let product of specialsProducts | slice:3:5">
+                  <app-product-box-one [product]="product" [currency]="productService?.Currency" [thumbnail]="true"
+                    [cartModal]="true">
+                  </app-product-box-one>
                 </div>
               </div>
             </div>
@@ -105,7 +153,7 @@
           <div class="theme-card center-align">
             <div class="offer-slider">
               <div class="d-flex flex-column gap-3">
-                <div class="product-box" *ngFor="let product of specialsProducts | slice:3:5">
+                <div class="product-box" *ngFor="let product of specialsProducts | slice:5:7">
                   <app-product-box-one [product]="product" [currency]="productService?.Currency" [thumbnail]="true">
                   </app-product-box-one>
                 </div>

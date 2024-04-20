@@ -38,4 +38,11 @@ export class CartVariationComponent implements OnInit, OnDestroy {
     this.closeCart();
   }
 
+  getProductRoute(product: Product): string {
+    const cleanedTitle = product.title.replace(/ /g, '-').trim();
+    const code = product.sku || ''; // Asegurándonos de que code tenga un valor
+    // return `/shop/product/left/sidebar/${cleanedTitle}-${code}`;
+    return `/shop/product/left/sidebar/${cleanedTitle}-${code}`;
+  }
+
 }

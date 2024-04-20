@@ -14,7 +14,7 @@
     </div>
     <div class="back" *ngIf="onHowerChangeImage">
       <a [routerLink]="['/shop/product/left/sidebar/', product.title.replace(' ', '-')]">
-        <img [src]="ImageSrc ? ImageSrc : product.images[1].src" class="img-fluid lazy-loading" alt="{{ product.images[1].alt }}">
+        <img [src]="ImageSrc ? ImageSrc : product.images[1].img_url" class="img-fluid lazy-loading" alt="{{ product.images[1].alt }}">
       </a>
     </div>
     <ul class="product-thumb-list" *ngIf="thumbnail">
@@ -33,21 +33,21 @@
         *ngIf="!cartModal">
         <i class="ti-shopping-cart"></i>
       </a>
-      <a href="javascript:void(0)" title="Add to Wishlist" (click)="addToWishlist(product)">
+      <!-- <a href="javascript:void(0)" title="Add to Wishlist" (click)="addToWishlist(product)">
         <i class="ti-heart" aria-hidden="true"></i>
-      </a>
+      </a> -->
       <a href="javascript:void(0)" title="Quick View" (click)="QuickView.openModal()">
         <i class="ti-search" aria-hidden="true"></i>
       </a>
-      <a href="javascript:void(0)" title="Compare" (click)="addToCompare(product)">
+      <!-- <a href="javascript:void(0)" title="Compare" (click)="addToCompare(product)">
         <i class="ti-reload" aria-hidden="true"></i>
-      </a>
+      </a> -->
     </div>
   </div>
   <div class="product-detail">
-    <div class="text-center">
+    <div class="text-center p-2">
       <!-- <bar-rating [rate]="5" [readOnly]="true"></bar-rating> -->
-      <a [routerLink]="['/shop/product/left/sidebar/', product?.title.replace(' ', '-')]">
+      <a [routerLink]="getProductRoute(product)">
         <h6>{{ product?.title | titlecase }}</h6>
       </a>
       <p>{{ product?.description }}</p>

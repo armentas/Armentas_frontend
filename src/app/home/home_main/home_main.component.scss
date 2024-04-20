@@ -1,0 +1,30 @@
+.container2{
+    margin: 0 auto;
+    width: 90%;
+}
+
+.floating {
+    animation: floatAnimation 2s infinite;
+}
+
+.floating2 {
+    animation: floatAnimation 2.5s infinite;
+}
+
+.floating:hover, .floating2:hover {
+    animation-play-state: paused;
+}
+
+@keyframes floatAnimation {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}

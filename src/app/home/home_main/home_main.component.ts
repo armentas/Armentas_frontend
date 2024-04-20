@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductSlider } from '../../shared/data/slider';
+import { HomeSlider, ProductSlider } from '../../shared/data/slider';
 import { Product } from '../../shared/classes/product';
 import { ProductService } from '../../shared/services/product.service';
 
@@ -13,6 +13,8 @@ export class HomeMainComponent implements OnInit {
   public products: Product[] = [];
   public specialsProducts: Product[] = [];
   public ProductSliderConfig: any = ProductSlider;
+  public HomeSliderConfig: any = HomeSlider;
+
 
   constructor(public productService: ProductService) {
     this.productService.getProducts.subscribe(response => {
@@ -22,10 +24,8 @@ export class HomeMainComponent implements OnInit {
         return lowercaseTags.includes('special') || lowercaseTags.includes('especial');
       });
     });
-
-
-
   }
+
 
   // Sliders
   public sliders = [{

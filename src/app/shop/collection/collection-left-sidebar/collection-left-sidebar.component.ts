@@ -11,7 +11,7 @@ import { Product } from '../../../shared/classes/product';
 })
 export class CollectionLeftSidebarComponent implements OnInit, AfterViewInit {
 
-  public grid: string = 'col-xl-3 col-md-6';
+  public grid: string = 'col-lg-2';
   public layoutView: string = 'grid-view';
 
   public products: Product[] = [];
@@ -46,7 +46,7 @@ export class CollectionLeftSidebarComponent implements OnInit, AfterViewInit {
       this.sortBy = params.sortBy ? params.sortBy : 'ascending';
       this.pageNo = params.page ? params.page : this.pageNo;
 
-      // Get Filtered Products..
+      // Get Filtered Products ..
       this.productService.filterProducts(this.tags).subscribe(response => {
         // Sorting Filter
         this.products = this.productService.sortProducts(response, this.sortBy);
@@ -56,8 +56,12 @@ export class CollectionLeftSidebarComponent implements OnInit, AfterViewInit {
             this.products = this.products.filter(item => item.type == this.type);
           else
             this.products = response;
-
         }
+        // Colors Filter
+        // this.products = this.products.filter(product => {
+        //   if(product.colors)
+        //     return product.colors.split(',').some( color => this.colors.includes(color))
+        // })
 
         // Price Filter
         this.products = this.products.filter(item => item.price >= this.minPrice && item.price <= this.maxPrice)
@@ -76,9 +80,9 @@ export class CollectionLeftSidebarComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.route.queryParams.subscribe(params => {
       if (params.type == 'Piñata')
-        this.imageBanner = 'assets/images/slider/pinatas.jpg';
+        this.imageBanner = 'assets/images/banner/Pinatas2.png';
       else
-        this.imageBanner = 'assets/images/slider/alcancias.png';
+        this.imageBanner = 'assets/images/banner/Piggy bank.png';
     })
   }
 

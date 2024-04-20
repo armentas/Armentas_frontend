@@ -13,7 +13,7 @@
                     </a>
                     <div class="media-body align-self-center">
                       <!-- <bar-rating [rate]="5" [readOnly]="true"></bar-rating> -->
-                      <a [routerLink]="['/shop/product/left/sidebar/', product.title.replace(' ', '-')]">
+                      <a [routerLink]="getProductRoute(product)">
                       <h6>{{ product.title | titlecase }}</h6></a>
                       <h4>
                         {{ product?.price * productService.Currency?.price | discount:product | currency:productService.Currency?.currency:'symbol' }}
@@ -37,7 +37,7 @@
                     </a>
                     <div class="media-body align-self-center">
                       <!-- <bar-rating [rate]="5" [readOnly]="true"></bar-rating> -->
-                      <a [routerLink]="['/shop/product/left/sidebar/', product.title.replace(' ', '-')]">
+                      <a [routerLink]="getProductRoute(product)">
                       <h6>{{ product.title | titlecase }}</h6></a>
                       <h4>
                         {{ product?.price * productService.Currency?.price | discount:product | currency:productService.Currency?.currency:'symbol' }}
@@ -61,7 +61,7 @@
                   </a>
                   <div class="media-body align-self-center">
                     <!-- <bar-rating [rate]="5" [readOnly]="true"></bar-rating> -->
-                    <a [routerLink]="['/shop/product/left/sidebar/', product.title.replace(' ', '-')]">
+                    <a [routerLink]="getProductRoute(product)">
                     <h6>{{ product.title | titlecase }}</h6></a>
                     <h4>
                       {{ product?.price * productService.Currency?.price | discount:product | currency:productService.Currency?.currency:'symbol' }}

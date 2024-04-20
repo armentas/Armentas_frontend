@@ -23,12 +23,12 @@
                 <tbody *ngFor="let product of products">
                     <tr>
                         <td>
-                            <a [routerLink]="['/shop/product/left/sidebar/', product.title.replace(' ', '-')]">
-                                <img [src]="product.images[0].src" [alt]="product.images[0].alt">
+                            <a [routerLink]="getProductRoute(product)">
+                                <img [src]="product.images[0].img_url" [alt]="product.images[0].alt">
                             </a>
                         </td>
                         <td>
-                            <a [routerLink]="['/shop/product/left/sidebar/', product.title.replace(' ', '-')]">{{ product.title | titlecase }}</a>
+                            <a [routerLink]="getProductRoute(product)">{{ product.title | titlecase }}</a>
                             <div class="mobile-cart-content row">
                                 <div class="col">
                                     <div class="qty-box">
@@ -100,7 +100,7 @@
         </div>
         <div class="row cart-buttons" *ngIf='products.length'>
             <div class="col-6">
-                <a [routerLink]="['/shop/collection/left/sidebar']" class="btn btn-solid">continue shopping</a>
+                <a [routerLink]="['/shop/collection/left/sidebar']" [queryParams]="{ type: 'All' }" class="btn btn-solid">continue shopping</a>
             </div>
             <div class="col-6">
                 <a [routerLink]="['/shop/checkout']" class="btn btn-solid">check out</a>
