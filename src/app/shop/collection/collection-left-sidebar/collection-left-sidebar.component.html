@@ -20,7 +20,8 @@
                         <!-- side-bar colleps block stat -->
                         <div class="collection-filter-block">
                             <!-- color filter start here -->
-                            <app-categories [products]="products" [categories]="categories" (categoriesFilter)="updateFilter($event)">
+                            <app-categories [products]="products" [categories]="categories"
+                                (categoriesFilter)="updateFilter($event)">
                             </app-categories>
                             <!-- color filter start here -->
                             <app-colors [products]="products" [colors]="colors" (colorsFilter)="updateFilter($event)">
@@ -52,14 +53,10 @@
                                         <img [src]="imageBanner" class="img-fluid " alt="">
                                     </a>
                                     <div class="top-banner-content small-section">
-                                        <h4>fashion</h4>
-                                        <h5>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                        </h5>
-                                        <p>
-                                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
-                                            survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-                                            and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                                        </p>
+                                        <h4>{{contentSelected?.title}}</h4>
+                                        <!-- <h5>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                        </h5> -->
+                                        <p>{{contentSelected?.description}}</p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -84,25 +81,34 @@
                                     </li>
                                 </ul>
                                 <div class="collection-product-wrapper" id="products">
-                                    <app-grid [products]="products" [paginate]="paginate" [layoutView]="layoutView" [sortBy]="sortBy" (setGrid)="updateGridLayout($event)" (setLayout)="updateLayoutView($event)" (sortedBy)="sortByFilter($event)">
+                                    <app-grid [products]="products" [paginate]="paginate" [layoutView]="layoutView"
+                                        [sortBy]="sortBy" (setGrid)="updateGridLayout($event)"
+                                        (setLayout)="updateLayoutView($event)" (sortedBy)="sortByFilter($event)">
                                     </app-grid>
                                     <div class="product-wrapper-grid" [ngClass]="layoutView">
                                         <div class="row">
                                             <div class="col-grid-box" [ngClass]="grid" *ngFor="let product of products">
                                                 <div class="product-box text-bg-light">
-                                                    <app-product-box-one [product]="product" [currency]="productService?.Currency" [thumbnail]="false" [cartModal]="true" [loader]="true">
+                                                    <app-product-box-one [product]="product"
+                                                        [currency]="productService?.Currency" [thumbnail]="false"
+                                                        [cartModal]="true" [loader]="true">
                                                     </app-product-box-one>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-12 text-center section-b-space mt-5 no-found" *ngIf="!products.length">
+                                            <div class="col-sm-12 text-center section-b-space mt-5 no-found"
+                                                *ngIf="!products.length">
                                                 <img src="assets/images/empty-search.jpg" class="img-fluid mb-4">
                                                 <h3>Sorry! Couldn't find the product you were looking For!!! </h3>
-                                                <p>Please check if you have misspelt something or try searching with other words.</p>
-                                                <a [routerLink]="['/shop/collection/left/sidebar']" class="btn btn-solid">continue shopping</a>
+                                                <p>Please check if you have misspelt something or try searching with
+                                                    other words.</p>
+                                                <a [routerLink]="['/shop/collection/left/sidebar']"
+                                                    [queryParams]="{ type: 'All'}" class="btn btn-solid">continue
+                                                    shopping</a>
                                             </div>
                                         </div>
                                     </div>
-                                    <app-pagination [products]="products" [paginate]="paginate" (setPage)="setPage($event)">
+                                    <app-pagination [products]="products" [paginate]="paginate"
+                                        (setPage)="setPage($event)">
                                     </app-pagination>
                                 </div>
                             </div>

@@ -6703,6 +6703,9 @@ ngx-loading-bar {
     .contact-right {
         padding-top: 30px;
         padding-bottom: 30px;
+        height: 400px;
+        display: flex;
+        align-items: center;
         ul {
             li {
                 position: relative;

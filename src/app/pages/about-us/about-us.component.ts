@@ -36,25 +36,21 @@ export class AboutUsComponent implements OnInit {
 
   // Team 
   public team = [{
-    image: 'assets/images/team/1.jpg',
-    name: 'Mark jkcno',
-    designation: 'Designer'
+    image: 'assets/images/team/hombre2.jpg',
+    name: 'Juan Carlos Armenta',
+    designation: 'Founder at Company'
   }, {
-    image: 'assets/images/team/2.jpg',
-    name: 'Adegoke Yusuff',
+    image: 'assets/images/team/mujer3.jpg',
+    name: 'Ana Maria Duran',
     designation: 'Content Writer'
   }, {
-    image: 'assets/images/team/3.jpg',
-    name: 'John Shipmen',
-    designation: 'Lead Developer'
+    image: 'assets/images/team/hombre1.jpg',
+    name: 'Aberto Gonzalez',
+    designation: 'Developer'
   }, {
-    image: 'assets/images/team/4.jpg',
-    name: 'Hileri Keol',
-    designation: 'CEO & Founder at Company'
-  }, {
-    image: 'assets/images/team/3.jpg',
-    name: 'John Shipmen',
-    designation: 'Lead Developer'
- }]
+    image: 'assets/images/team/mujer2.jpg',
+    name: 'Karla Diaz',
+    designation: 'Accounting Manager'
+  }]
 
 }

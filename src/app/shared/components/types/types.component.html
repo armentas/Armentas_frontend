@@ -5,8 +5,9 @@
         <div class="collection-brand-filter">
             <ul class="category-list">
                 <li *ngFor="let type of filterbyType">
-                    <a [routerLink]="['/shop/collection/left/sidebar']"
-                       [queryParams]="{ type: type}">
+                    <a [routerLink]="['/shop/collection/infinitescroll']"
+                       [queryParams]="{ type: type}"
+                       [class.active]="type === activeType">
                         {{ type }}
                     </a>
                 </li>

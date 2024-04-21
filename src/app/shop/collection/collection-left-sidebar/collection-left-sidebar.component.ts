@@ -24,6 +24,18 @@ export class CollectionLeftSidebarComponent implements OnInit, AfterViewInit {
   public tags: any[] = [];
   public type: string;
 
+  contentSelected: any;
+  content: any[] = [
+    {
+      title: 'Piñatas',
+      description: `Welcome to our exclusive piñata paradise! Immerse yourself in a world where imagination reigns and every celebration becomes a masterpiece. Whether you're planning a sophisticated soiree for adults or a whimsical gathering for the little ones, our diverse range of designs ensures there's something for everyone. From majestic unicorns to racing cars, our piñatas are made with care and attention to detail, guaranteeing smiles and laughter at every turn. Explore our collection today and get the party started!`
+    },
+    {
+      title: 'Piggy bank',
+      description: `Welcome to our Mexican-inspired piggy bank paradise! Step into a world where traditional charm meets modern convenience, all wrapped up in a colorful fiesta of savings. Our collection of piggy banks boasts a diverse array of shapes and sizes, each infused with the vibrant spirit of Mexico. From sombrero-wearing burros to mariachi-playing guitars, our alcancías (piggy banks) capture the essence of Mexican culture in every detail. Whether you're saving up for your next adventure or simply adding a touch of fiesta to your home decor.`
+    },
+  ];
+
   public pageNo: number = 1;
   public paginate: any = {}; // Pagination use only
   public sortBy: string; // Sorting Order
@@ -73,16 +85,20 @@ export class CollectionLeftSidebarComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-
   }
 
 
   ngAfterViewInit(): void {
     this.route.queryParams.subscribe(params => {
-      if (params.type == 'Piñata')
+      if (params.type == 'Piñata'){
         this.imageBanner = 'assets/images/banner/Pinatas2.png';
+        this.contentSelected = this.content[0];
+      }
       else
+      {
         this.imageBanner = 'assets/images/banner/Piggy bank.png';
+        this.contentSelected = this.content[1];
+      }
     })
   }
 
@@ -141,7 +157,7 @@ export class CollectionLeftSidebarComponent implements OnInit, AfterViewInit {
   removeAllTags() {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: {},
+      queryParams: {type: 'All'},
       skipLocationChange: false  // do trigger navigation
     }).finally(() => {
       this.viewScroller.setOffset([120, 120]);
