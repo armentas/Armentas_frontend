@@ -6,6 +6,9 @@ import { environment } from '../../../environments/environment';
 import { Product } from "../../shared/classes/product";
 import { ProductService } from "../../shared/services/product.service";
 import { OrderService } from "../../shared/services/order.service";
+import { ApiService } from 'src/app/shared/services/api.service';
+import {loadStripe} from '@stripe/stripe-js';
+
 
 @Component({
   selector: 'app-checkout',
@@ -14,15 +17,17 @@ import { OrderService } from "../../shared/services/order.service";
 })
 export class CheckoutComponent implements OnInit {
 
-  public checkoutForm:  UntypedFormGroup;
+  public checkoutForm: UntypedFormGroup;
   public products: Product[] = [];
   // public payPalConfig ? : IPayPalConfig;
   public payment: string = 'Stripe';
-  public amount:  any;
+  public amount: any;
+
 
   constructor(private fb: UntypedFormBuilder,
     public productService: ProductService,
-    private orderService: OrderService) { 
+    private orderService: OrderService,
+    private apiService: ApiService) {
     this.checkoutForm = this.fb.group({
       firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
       lastname: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
@@ -61,7 +66,20 @@ export class CheckoutComponent implements OnInit {
       name: 'Armentas Shop',
       description: 'Online Fashion Store',
       amount: this.amount * 100
-    }) 
+    })
+  }
+
+  async initPay() {
+    console.log(this.products);
+    
+    const response = await this.apiService.onProceedToPay(this.products);
+    const stripe = await loadStripe(environment.stripe_token);
+
+    const checkout = await stripe.initEmbeddedCheckout({
+      clientSecret: response.session.client_secret,
+    });
+
+    checkout.mount('#checkout');
   }
 
   // Paypal Payment Gateway
