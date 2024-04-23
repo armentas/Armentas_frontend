@@ -60,7 +60,7 @@ export class CollectionInfinitescrollComponent implements OnInit {
       this.colors = params.color ? params.color.split(",") : [];
       this.minPrice = params.minPrice ? params.minPrice : this.minPrice;
       this.maxPrice = params.maxPrice ? params.maxPrice : this.maxPrice;
-      this.tags = [...this.brands, ...this.colors, ...this.size]; // All Tags Array
+      this.tags = [...this.categories, ...this.colors]; // All Tags Array
       this.type = params.type ? params.type : null;
       this.sortBy = params.sortBy ? params.sortBy : 'ascending';
 

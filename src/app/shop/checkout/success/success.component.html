@@ -10,7 +10,7 @@
                 <div class="error-section">
                     <h1>404</h1>
                     <h2>page not found</h2>
-                    <a [routerLink]="'/home/fashion'" class="btn btn-solid">back to home</a>
+                    <a [routerLink]="'/home/main'" class="btn btn-solid">back to home</a>
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
                     <i class="fa fa-check-circle" aria-hidden="true"></i>
                     <h2>thank you</h2>
                     <p>Payment is has been received Order Placed Successfully</p>
-                    <p>Transaction ID:{{ orderDetails.orderId }}</p>
+                    <p>Transaction ID:{{ retrievePaymentIntent?.paymentIntent.id }}</p>
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
                     <h3>your order details</h3>
                     <div class="row product-order-detail" *ngFor="let product of orderDetails.product">
                         <div class="col-3">
-                            <img [src]="product.images[0].src" alt="" class="img-fluid">
+                            <img [src]="product.images[0].img_url" alt="" class="img-fluid">
                         </div>
                         <div class="col-3 order_detail">
                             <div>
@@ -83,28 +83,26 @@
                         <h4>summery</h4>
                         <ul class="order-detail">
                             <li>order ID: {{ orderDetails.orderId }}</li>
-                            <li>Order Date: October 22, 2021</li>
+                            <li>Order Date: {{ today }}</li>
                             <li>Order Total: {{ orderDetails.totalAmount | currency:productService?.Currency.currency:'symbol' }}</li>
                         </ul>
                     </div>
                     <div class="col-sm-6">
                         <h4>shipping address</h4>
                         <ul class="order-detail">
-                            <li>{{ orderDetails.shippingDetails.address }}</li>
-                            <li>{{ orderDetails.shippingDetails.state }}</li>
-                            <li>{{ orderDetails.shippingDetails.country }}, {{ orderDetails.shippingDetails.postalcode }}</li>
-                            <li>Contact No. {{ orderDetails.shippingDetails.phone }}</li>
+                            <li>{{ retrievePaymentIntent?.paymentIntent.shipping.address.line1 }}, {{ retrievePaymentIntent?.paymentIntent.shipping.address.line2 }}</li>
+                            <li>{{ retrievePaymentIntent?.paymentIntent.shipping.address.city }} {{ retrievePaymentIntent?.paymentIntent.shipping.address.state }}, {{ retrievePaymentIntent?.paymentIntent.shipping.address.country }}</li>
+                            <li>C.P.: {{ retrievePaymentIntent?.paymentIntent.shipping.address.postal_code }}</li>
                         </ul>
                     </div>
-
-                    <div class="col-sm-12 payment-mode">
+                    <div class="col-sm-12 payment-mode mt-3">
                         <h4>payment method</h4>
                         <p>Pay on Delivery (Cash/Card). Cash on delivery (COD) available. Card/Net banking acceptance subject to device availability.</p>
                     </div>
                     <div class="col-md-12">
                         <div class="delivery-sec">
                             <h3>expected date of delivery</h3>
-                            <h2>March 21, 2021</h2>
+                            <h2>{{calculateDate()}}</h2>
                         </div>
                     </div>
                 </div>

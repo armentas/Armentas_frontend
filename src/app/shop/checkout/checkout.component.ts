@@ -1,14 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-// import { IPayPalConfig, ICreateOrderRequest } from 'ngx-paypal';
 import { environment } from '../../../environments/environment';
 import { Product } from "../../shared/classes/product";
 import { ProductService } from "../../shared/services/product.service";
 import { OrderService } from "../../shared/services/order.service";
 import { ApiService } from 'src/app/shared/services/api.service';
-import {loadStripe} from '@stripe/stripe-js';
+import { Stripe, loadStripe } from '@stripe/stripe-js';
+import { NgbAlert, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
 
+interface Alert {
+  type: string;
+  message: string;
+}
 
 @Component({
   selector: 'app-checkout',
@@ -17,34 +22,64 @@ import {loadStripe} from '@stripe/stripe-js';
 })
 export class CheckoutComponent implements OnInit {
 
+  modal: boolean = false;
   public checkoutForm: UntypedFormGroup;
   public products: Product[] = [];
-  // public payPalConfig ? : IPayPalConfig;
+
   public payment: string = 'Stripe';
   public amount: any;
+  elements: any;
+  clientId: string;
 
+  isLoading: boolean = false;
+  stripeMessage: string = '';
+
+  staticAlertClosed: boolean = true;
+  alert: Alert = {
+    type: 'primary',
+    message: ''
+  };
+
+  stripe: Stripe;
+
+  @ViewChild('staticAlert', { static: false }) staticAlert: NgbAlert;
+  // @ViewChild('selfClosingAlert', { static: false }) selfClosingAlert: NgbAlert;
 
   constructor(private fb: UntypedFormBuilder,
     public productService: ProductService,
     private orderService: OrderService,
-    private apiService: ApiService) {
+    private apiService: ApiService,
+    private modalService: NgbModal,
+    private router: Router,
+    config: NgbModalConfig) {
     this.checkoutForm = this.fb.group({
-      firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
-      lastname: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
+      fullname: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
       phone: ['', [Validators.required, Validators.pattern('[0-9]+')]],
-      email: ['', [Validators.required, Validators.email]],
       address: ['', [Validators.required, Validators.maxLength(50)]],
       country: ['', Validators.required],
-      town: ['', Validators.required],
+      city: ['', Validators.required],
       state: ['', Validators.required],
       postalcode: ['', Validators.required]
-    })
+    });
+    config.backdrop = 'static';
+    config.keyboard = false;
   }
 
-  ngOnInit(): void {
-    this.productService.cartItems.subscribe(response => this.products = response);
+  async ngOnInit() {
+    this.stripe = await loadStripe(environment.stripe_token);
+
+    this.productService.cartItems.subscribe(response => {
+      this.products = response      
+    });
     this.getTotal.subscribe(amount => this.amount = amount);
     this.initConfig();
+
+    this.checkPayStatus()
+  }
+
+
+  openVerticallyCentered(content: TemplateRef<any>) {
+    this.modalService.open(content, { centered: true, size: 'lg' });
   }
 
   public get getTotal(): Observable<number> {
@@ -52,84 +87,158 @@ export class CheckoutComponent implements OnInit {
   }
 
   // Stripe Payment Gateway
-  stripeCheckout() {
-    var handler = (<any>window).StripeCheckout.configure({
-      key: environment.stripe_token, // publishble key
-      locale: 'auto',
-      token: (token: any) => {
-        // You can access the token ID with `token.id`.
-        // Get the token ID to your server-side code for use.
-        this.orderService.createOrder(this.products, this.checkoutForm.value, token.id, this.amount);
-      }
-    });
-    handler.open({
-      name: 'Armentas Shop',
-      description: 'Online Fashion Store',
-      amount: this.amount * 100
-    })
-  }
-
   async initPay() {
-    console.log(this.products);
-    
-    const response = await this.apiService.onProceedToPay(this.products);
-    const stripe = await loadStripe(environment.stripe_token);
+    try {
+      localStorage.setItem("shippingData", JSON.stringify(this.checkoutForm.value));
+      this.openModal();
 
-    const checkout = await stripe.initEmbeddedCheckout({
-      clientSecret: response.session.client_secret,
-    });
+      const response = await this.apiService.onProceedToPay2(this.products);
+      this.clientId = response.clientId;
 
-    checkout.mount('#checkout');
+      this.elements = this.stripe.elements({
+        clientSecret: response.clientSecret,
+        appearance: {
+          theme: 'stripe',
+          variables: {
+            fontWeightNormal: '500',
+            borderRadius: '0px',
+            colorPrimary: '#5469d4',
+            tabIconSelectedColor: '#fff',
+            gridRowSpacing: '16px'
+          },
+        }
+      });
+
+      const paymentElementOptions = {
+        layout: "tabs",
+      };
+
+      const options = { mode: 'billing' };
+      const paymentElement = this.elements.create("payment", paymentElementOptions);
+      const addressElement = this.elements.create('address', options);
+      paymentElement.mount("#payment-element");
+      addressElement.mount('#address-element');
+
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  async doPay(e) {
+    try {
+      e.preventDefault();
+      this.isLoading = true;
+
+      const { error } = await this.stripe.confirmPayment({
+        elements: this.elements,
+        confirmParams: {
+          // Make sure to change this to your payment completion page
+          return_url: "http://localhost:62095/shop/checkout/",
+        },
+      });
+
+      if (error.type === "card_error" || error.type === "validation_error") {
+        this.stripeMessage = error.message;
+      } else {
+        this.stripeMessage = "An unexpected error occurred.";
+      }
+
+      this.isLoading = false;
+
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  async checkPayStatus() {
+    try {
+      const clientSecret = new URLSearchParams(window.location.search).get(
+        "payment_intent_client_secret"
+      );
+
+      if (!clientSecret) {
+        return;
+      }
+
+      const { paymentIntent } = await this.stripe.retrievePaymentIntent(clientSecret); 
+      console.log(paymentIntent);
+          
+
+      switch (paymentIntent.status) {
+        case "succeeded": {
+          const shippingData = JSON.parse(localStorage.getItem('shippingData'));
+
+          await this.apiService.updatePaymentIntentShipping(paymentIntent.id, shippingData)
+          
+          this.orderService.createOrder(this.products, this.checkoutForm.value, this.orderIDGenerator(), this.amount);
+          localStorage.removeItem("cartItems");
+          this.router.navigate(['/shop/checkout/success/data'], { queryParams: { client_secret: paymentIntent.client_secret } });
+          break;
+        }
+        case "processing": {
+          this.alert = {
+            type: 'primary',
+            message: 'Your payment is processing.',
+          }
+          this.staticAlertClosed = false
+          break;
+        }
+        case "requires_payment_method": {
+          this.alert = {
+            type: 'danger',
+            message: 'Your payment was not successful, please try again.',
+          }
+          this.staticAlertClosed = false
+          break;
+        }
+        default:
+          {
+            this.alert = {
+              type: 'danger',
+              message: 'Something went wrong.',
+            }
+            this.staticAlertClosed = false
+            break;
+          }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  orderIDGenerator() {
+    const prefijo = 'AR-';
+    const fecha = new Date();
+  
+    // Obtenemos los componentes de la fecha
+    const year = fecha.getFullYear().toString().slice(-2);
+    const month = ('0' + (fecha.getMonth() + 1)).slice(-2);
+    const day = ('0' + fecha.getDate()).slice(-2);
+    const hours = ('0' + fecha.getHours()).slice(-2);
+    const minutes = ('0' + fecha.getMinutes()).slice(-2);
+    const seconds = ('0' + fecha.getSeconds()).slice(-2);
+    const milliseconds = ('00' + fecha.getMilliseconds()).slice(-3);
+  
+    // Construimos el código
+    const codigo = `${prefijo}${year}${month}${day}-${hours}${minutes}${seconds}${milliseconds}`;
+  
+    return codigo;
+  }
+
+  async closeModal() {
+    const status = await this.apiService.cancelPaymentIntent(this.clientId);
+    console.log(status);
+    this.modal = false;
+  }
+
+  // Función para abrir el modal
+  openModal() {
+    this.modal = true;
+  }
+
 
   // Paypal Payment Gateway
   private initConfig(): void {
-    // this.payPalConfig = {
-    //     currency: this.productService.Currency.currency,
-    //     clientId: environment.paypal_token,
-    //     createOrderOnClient: (data) => < ICreateOrderRequest > {
-    //       intent: 'CAPTURE',
-    //       purchase_units: [{
-    //           amount: {
-    //             currency_code: this.productService.Currency.currency,
-    //             value: this.amount,
-    //             breakdown: {
-    //                 item_total: {
-    //                     currency_code: this.productService.Currency.currency,
-    //                     value: this.amount
-    //                 }
-    //             }
-    //           }
-    //       }]
-    //   },
-    //     advanced: {
-    //         commit: 'true'
-    //     },
-    //     style: {
-    //         label: 'paypal',
-    //         size:  'small', // small | medium | large | responsive
-    //         shape: 'rect', // pill | rect
-    //     },
-    //     onApprove: (data, actions) => {
-    //         this.orderService.createOrder(this.products, this.checkoutForm.value, data.orderID, this.getTotal);
-    //         console.log('onApprove - transaction was approved, but not authorized', data, actions);
-    //         actions.order.get().then(details => {
-    //             console.log('onApprove - you can get full order details inside onApprove: ', details);
-    //         });
-    //     },
-    //     onClientAuthorization: (data) => {
-    //         console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
-    //     },
-    //     onCancel: (data, actions) => {
-    //         console.log('OnCancel', data, actions);
-    //     },
-    //     onError: err => {
-    //         console.log('OnError', err);
-    //     },
-    //     onClick: (data, actions) => {
-    //         console.log('onClick', data, actions);
-    //     }
-    // };
   }
 
 }
