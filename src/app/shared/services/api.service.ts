@@ -26,4 +26,12 @@ export class ApiService {
   updatePaymentIntentShipping(paymentIntentId: string, data: any): any {
     return lastValueFrom(this.http.post(`${environment.baseUrl}/payment/update-payment-intent-shipping/${paymentIntentId}`, { data } ));
   }
+
+  getPaymentMethod(paymentMethodId: string): any {
+    return lastValueFrom(this.http.get(`${environment.baseUrl}/payment/get-payment-method/${paymentMethodId}`));
+  }
+
+  saveOrder(data: any): any {
+    return lastValueFrom(this.http.post(`${environment.baseUrl}/payment/save-order`, { data }));
+  }
 }
