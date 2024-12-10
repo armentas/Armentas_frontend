@@ -72,7 +72,7 @@ export class CheckoutComponent implements OnInit {
       this.products = response      
     });
     this.getTotal.subscribe(amount => this.amount = amount);
-    this.initConfig();
+    this.initConfig();    
 
     this.checkPayStatus()
   }
@@ -91,8 +91,9 @@ export class CheckoutComponent implements OnInit {
     try {
       localStorage.setItem("shippingData", JSON.stringify(this.checkoutForm.value));
       this.openModal();
-
-      const response = await this.apiService.onProceedToPay2(this.products);
+      console.log(this.amount);
+      
+      const response = await this.apiService.onProceedToPay2(this.amount);
       this.clientId = response.clientId;
 
       this.elements = this.stripe.elements({
@@ -126,6 +127,7 @@ export class CheckoutComponent implements OnInit {
 
   async doPay(e) {
     try {
+      this.stripeMessage = '';
       e.preventDefault();
       this.isLoading = true;
 
@@ -133,7 +135,7 @@ export class CheckoutComponent implements OnInit {
         elements: this.elements,
         confirmParams: {
           // Make sure to change this to your payment completion page
-          return_url: "http://localhost:62095/shop/checkout/",
+          return_url: `${environment.returnUrl}/shop/checkout`
         },
       });
 
@@ -160,9 +162,7 @@ export class CheckoutComponent implements OnInit {
         return;
       }
 
-      const { paymentIntent } = await this.stripe.retrievePaymentIntent(clientSecret); 
-      console.log(paymentIntent);
-          
+      const { paymentIntent } = await this.stripe.retrievePaymentIntent(clientSecret);           
 
       switch (paymentIntent.status) {
         case "succeeded": {
@@ -171,7 +171,7 @@ export class CheckoutComponent implements OnInit {
           await this.apiService.updatePaymentIntentShipping(paymentIntent.id, shippingData)
           
           this.orderService.createOrder(this.products, this.checkoutForm.value, this.orderIDGenerator(), this.amount);
-          localStorage.removeItem("cartItems");
+          // localStorage.removeItem("cartItems");
           this.router.navigate(['/shop/checkout/success/data'], { queryParams: { client_secret: paymentIntent.client_secret } });
           break;
         }

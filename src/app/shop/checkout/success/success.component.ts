@@ -41,6 +41,16 @@ export class SuccessComponent implements OnInit {
 
     await this.saveOrder(paymentMethod.billing_details.name, paymentMethod.billing_details.phone, paymentMethod.type);
 
+    this.cleanCart();
+
+  }
+
+  cleanCart(){
+    const items = JSON.parse(localStorage.getItem("cartItems"));
+
+    for (let i = 0; i < items.length; i++) {
+      this.productService.removeCartItem(items[i]);
+    }
   }
 
   calculateDate(): string {

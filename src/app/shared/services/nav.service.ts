@@ -68,7 +68,7 @@ export class NavService {
 			]
 		},
 		{ 
-			path: '/pages/aboutus', title: 'Abouts us', type: 'link' 
+			path: '/pages/aboutus', title: 'About us', type: 'link' 
 		},
 		{ 
 			path: '/pages/contact', title: 'Contact', type: 'link' 

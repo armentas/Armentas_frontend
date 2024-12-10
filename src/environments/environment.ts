@@ -7,7 +7,8 @@ export const environment = {
   stripe_token: 'pk_test_51OXnbzHafjd0gJ8NRzxGQNzEfRi7Kq3mmzQ9XeRRrfDDAS9XpwG4QQ1OlfvW7KATUQxlc18jFAvqQtvhnfPwxw5m008hhXIKQc',
   paypal_token: 'PAYPAL_TOKEN',
 
-  baseUrl: 'http://localhost:3010/api/shop'
+  baseUrl: 'http://localhost:3010/api/shop',
+  returnUrl: 'http://localhost:4200'
 };
 
 /*
