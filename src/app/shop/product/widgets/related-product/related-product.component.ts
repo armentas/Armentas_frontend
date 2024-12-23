@@ -9,14 +9,14 @@ import { ProductService } from '../../../../shared/services/product.service';
 })
 export class RelatedProductComponent implements OnInit {
   
-  @Input() type: string
+  @Input() collection: string
   @Input() category: string
 
   public products: Product[] = [];
 
   constructor(public productService: ProductService) { 
     this.productService.getProducts.subscribe(response => 
-      this.products = response.filter(item => item.type == this.type && item.category == this.category)
+      this.products = response.filter(item => item.collection == this.collection && item.category == this.category)
     );
   }
 

@@ -19,7 +19,7 @@
             </div>
                 <app-product-box-vertical-slider 
                   [title]="'New product'" 
-                  [type]="product?.type">
+                  [collection]="product?.collection">
                 </app-product-box-vertical-slider>
           </div>
         </div>
@@ -183,7 +183,7 @@
       </div>
     </div>
   </div>
-  <app-related-product [type]="product?.type" [category]="product?.category"></app-related-product>
+  <app-related-product [collection]="product?.collection" [category]="product?.category"></app-related-product>
   <!-- <app-related-product [type]="product?.type"></app-related-product> -->
 </section>
 <app-size-modal #sizeChart [product]="product"></app-size-modal>

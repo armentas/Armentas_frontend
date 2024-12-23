@@ -6,12 +6,12 @@
             *ngFor="let category of filterbyCategories; let i = index">
           <input 
             type="checkbox" 
-            [value]="category"
-            [checked]="checked(category)"
+            [value]="category.name"
+            [checked]="checked(category.name)"
             [id]="category"
             (change)="appliedFilter($event)"
             class="custom-control-input" />
-          <label class="custom-control-label" for="{{ category }}">{{ category }}</label>
+          <label class="custom-control-label" for="{{ category.name }}">{{ category.name }}</label>
         </div>
       </div>
     </div>

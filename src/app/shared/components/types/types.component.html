@@ -1,14 +1,14 @@
 <!-- Start Categories List -->
 <div class="collection-collapse-block border-0" [class.open]="collapse">
-    <h3 class="collapse-block-title" (click)="collapse = !collapse">Types</h3>
+    <h3 class="collapse-block-title" (click)="collapse = !collapse">Collections</h3>
     <div class="collection-collapse-block-content">
         <div class="collection-brand-filter">
             <ul class="category-list">
-                <li *ngFor="let type of filterbyType">
+                <li *ngFor="let collection of filterbyCollection">
                     <a [routerLink]="['/shop/collection/infinitescroll']"
-                       [queryParams]="{ type: type}"
-                       [class.active]="type === activeType">
-                        {{ type }}
+                       [queryParams]="{ collection: collection}"
+                       [class.active]="collection === activeCollection">
+                        {{ collection }}
                     </a>
                 </li>
             </ul>

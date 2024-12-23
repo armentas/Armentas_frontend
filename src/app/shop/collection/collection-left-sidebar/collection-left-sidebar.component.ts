@@ -22,7 +22,7 @@ export class CollectionLeftSidebarComponent implements OnInit, AfterViewInit {
   public minPrice: number = 0;
   public maxPrice: number = 1200;
   public tags: any[] = [];
-  public type: string;
+  public collection: string;
 
   contentSelected: any;
   content: any[] = [
@@ -54,7 +54,7 @@ export class CollectionLeftSidebarComponent implements OnInit, AfterViewInit {
       this.maxPrice = params.maxPrice ? params.maxPrice : this.maxPrice;
       this.tags = [...this.categories, ...this.colors]; // All Tags Array
 
-      this.type = params.type ? params.type : null;
+      this.collection = params.collection ? params.collection : null;
       this.sortBy = params.sortBy ? params.sortBy : 'ascending';
       this.pageNo = params.page ? params.page : this.pageNo;
 
@@ -63,9 +63,9 @@ export class CollectionLeftSidebarComponent implements OnInit, AfterViewInit {
         // Sorting Filter
         this.products = this.productService.sortProducts(response, this.sortBy);
         // Type Filter
-        if (params.type) {
-          if (this.type !== 'All')
-            this.products = this.products.filter(item => item.type == this.type);
+        if (params.collection) {
+          if (this.collection !== 'All')
+            this.products = this.products.filter(item => item.collection == this.collection);
           else
             this.products = response;
         }

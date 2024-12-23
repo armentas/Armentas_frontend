@@ -4,6 +4,8 @@ import { ViewportScroller } from '@angular/common';
 import { ProductService } from "../../../shared/services/product.service";
 import { Product } from '../../../shared/classes/product';
 import * as _ from 'lodash'
+import { ApiService } from 'src/app/shared/services/api.service';
+import { response } from 'express';
 
 @Component({
   selector: 'app-collection-infinitescroll',
@@ -15,6 +17,7 @@ export class CollectionInfinitescrollComponent implements OnInit {
   public grid: string = 'col-lg-2';
   public layoutView: string = 'grid-view';
   public all_products: any[] = [];
+  public all_collections: any[] = [];
   public products: any[] = [];
   public brands: any[] = [];
   public colors: any[] = [];
@@ -23,7 +26,7 @@ export class CollectionInfinitescrollComponent implements OnInit {
   public maxPrice: number = 1200;
   public tags: any[] = [];
   public categories: any[] = [];
-  public type: string;
+  public collection: string;
   public pageNo: number = 1;
   public paginate: any = {}; // Pagination use only
   public sortBy: string; // Sorting Order
@@ -31,28 +34,21 @@ export class CollectionInfinitescrollComponent implements OnInit {
   public loader: boolean = true;
   public finished: boolean = false  // boolean when end of data is reached
   public addItemCount = 8;
-  public imageBanner: string = '';
 
-  contentSelected: any;
-  content: any[] = [
-    {
-      title: 'Piñatas',
-      description: `Welcome to our exclusive piñata paradise! Immerse yourself in a world where imagination reigns and every celebration becomes a masterpiece. Whether you're planning a sophisticated soiree for adults or a whimsical gathering for the little ones, our diverse range of designs ensures there's something for everyone. From majestic unicorns to racing cars, our piñatas are made with care and attention to detail, guaranteeing smiles and laughter at every turn. Explore our collection today and get the party started!`
-    },
-    {
-      title: 'Piggy bank',
-      description: `Welcome to our Mexican-inspired piggy bank paradise! Step into a world where traditional charm meets modern convenience, all wrapped up in a colorful fiesta of savings. Our collection of piggy banks boasts a diverse array of shapes and sizes, each infused with the vibrant spirit of Mexico. From sombrero-wearing burros to mariachi-playing guitars, our alcancías (piggy banks) capture the essence of Mexican culture in every detail. Whether you're saving up for your next adventure or simply adding a touch of fiesta to your home decor.`
-    },
-    {
-      title: 'All our products',
-      description: `Welcome to our vibrant collection of Mexican-inspired treasures! Immerse yourself in a world where rich cultural heritage meets contemporary flair, all wrapped up in a fiesta of colors and craftsmanship. With each piece lovingly crafted by skilled artisans, our collection invites you to experience the magic of Mexico wherever you are. So why not bring a little piece of Mexico into your life today? Explore our collection.`
-    },
-  ];
+  public collectionBanner: string = '';
+  public collectionTitle: string = '';
+  public collectionDescription: string = '';
+
+  loading: boolean = false;
+  
 
   constructor(private route: ActivatedRoute, private router: Router,
-    private viewScroller: ViewportScroller, public productService: ProductService) {
+    private viewScroller: ViewportScroller, public productService: ProductService, private apiService: ApiService) {  }
+
+  ngOnInit() {
     // Get Query params..
     this.route.queryParams.subscribe(params => {
+      this.loading = true;
       this.products = [];
       this.finished = false;
 
@@ -61,7 +57,7 @@ export class CollectionInfinitescrollComponent implements OnInit {
       this.minPrice = params.minPrice ? params.minPrice : this.minPrice;
       this.maxPrice = params.maxPrice ? params.maxPrice : this.maxPrice;
       this.tags = [...this.categories, ...this.colors]; // All Tags Array
-      this.type = params.type ? params.type : null;
+      this.collection = params.collection ? params.collection : null;
       this.sortBy = params.sortBy ? params.sortBy : 'ascending';
 
       // Get Filtered Products..
@@ -74,39 +70,40 @@ export class CollectionInfinitescrollComponent implements OnInit {
         this.all_products = this.productService.sortProducts(response, this.sortBy);
 
         // Type Filter
-        if (params.type) {
-          if (this.type !== 'All')
-            this.all_products = this.all_products.filter(item => item.type == this.type);
-          else
-            this.all_products = this.all_products;
+        if (params.collection) {
+          if (this.collection !== 'All')
+            this.all_products = this.all_products.filter(item => item.collection == this.collection);
         }
 
         // Price Filter
         this.all_products = this.all_products.filter(item => item.price >= this.minPrice && item.price <= this.maxPrice)
 
         this.addItems();
-
+        this.loading = false;
+      },error => {
+        // Manejo de error
+        console.error(error);
+        this.loading = false;
       })
-    })
-  }
+    });
 
-  ngOnInit(): void {
+    this.apiService.getAllCollections.subscribe( response => {
+      this.all_collections = response;      
 
-  }
-
-  ngAfterViewInit(): void {
-    this.route.queryParams.subscribe(params => {
-      if (params.type == 'Piñata') {
-        this.imageBanner = 'assets/images/banner/Pinatas.png';
-        this.contentSelected = this.content[0];
-      }
-      else if (params.type == 'Piggy bank') {
-        this.imageBanner = 'assets/images/banner/Piggy bank.png';
-        this.contentSelected = this.content[1];
-      } else {
-        this.imageBanner = 'assets/images/banner/All.png';
-        this.contentSelected = this.content[2];
-      }
+      this.route.queryParams.subscribe(params => {
+        if (params.collection !== 'All') {        
+          const coll = this.all_collections.filter(col => col.name === params.collection);
+          console.log(this.all_collections);
+          this.collectionBanner = coll[0].image;
+          this.collectionTitle = coll[0].title;
+          this.collectionDescription = coll[0].description;
+        } else {
+          const coll = this.all_collections.filter(col => col.code === 'GG');
+          this.collectionBanner = coll[0].image;
+          this.collectionTitle = coll[0].title;
+          this.collectionDescription = coll[0].description;
+        }
+      })
     })
   }
 

@@ -3,15 +3,16 @@ export interface Product {
     id?: number;
     title?: string;
     description?: string;
-    type?: string;
+    collection?: string;
     sku?: string;
     brand?: string;
-    collection?: string[];
+    // collection?: string[];
     category?: string;
     price?: number;
     colors?: string;
     sale?: boolean;
     discount?: number;
+    weight?: number;
     stock?: number;
     new?: boolean;
     quantity?: number;

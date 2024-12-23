@@ -16,15 +16,7 @@ export class HomeMainComponent implements OnInit {
   public HomeSliderConfig: any = HomeSlider;
 
 
-  constructor(public productService: ProductService) {
-    this.productService.getProducts.subscribe(response => {
-      this.products = response.filter(item => item.type == 'Piñata' || item.type == 'Piggy bank')
-      this.specialsProducts = response.filter(item => {
-        const lowercaseTags = item.tags.map(tag => tag.toLowerCase());
-        return lowercaseTags.includes('special') || lowercaseTags.includes('especial');
-      });
-    });
-  }
+  constructor(public productService: ProductService) {  }
 
 
   // Sliders
@@ -41,6 +33,13 @@ export class HomeMainComponent implements OnInit {
   }];
 
   ngOnInit(): void {
+    this.productService.getProducts.subscribe(response => {
+      this.products = response;
+      this.specialsProducts = response.filter(item => {
+        const lowercaseTags = item.tags.map(tag => tag.toLowerCase());
+        return lowercaseTags.includes('special') || lowercaseTags.includes('especial');
+      });
+    });
   }
 
 }

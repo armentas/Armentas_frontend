@@ -1,5 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Category } from 'src/app/shared/classes/category';
 import { Product } from 'src/app/shared/classes/product';
+import { ApiService } from 'src/app/shared/services/api.service';
 
 @Component({
   selector: 'app-categories',
@@ -14,13 +16,15 @@ export class CategoriesComponent implements OnInit {
   @Output() categoriesFilter: EventEmitter<any> = new EventEmitter<any>();
 
   public collapse: boolean = true;
-  filterbyCategories: string[] = [];
+  filterbyCategories: Category[] = [];
 
-  constructor() { 
+  constructor(public apiService: ApiService) { 
   }
 
   ngOnInit(): void {
-    this.filterbyCategories = ['Girls', 'Boys', 'Adults','Unisex'];
+    this.apiService.getAllCategories.subscribe( response => {
+      this.filterbyCategories = response;
+    })
   }
 
   // get filterbyCategories() {

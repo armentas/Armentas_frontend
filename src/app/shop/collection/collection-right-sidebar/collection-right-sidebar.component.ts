@@ -50,7 +50,7 @@ export class CollectionRightSidebarComponent implements OnInit {
           
           // Category Filter
           if(params.category)
-            this.products = this.products.filter(item => item.type == this.category);
+            this.products = this.products.filter(item => item.collection == this.category);
 
           // Price Filter
           this.products = this.products.filter(item => item.price >= this.minPrice && item.price <= this.maxPrice) 

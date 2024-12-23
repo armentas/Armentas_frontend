@@ -12,7 +12,7 @@ import { log } from 'console';
 export class ProductBoxVerticalSliderComponent implements OnInit {
 
   @Input() title: string = 'New Product'; // Default
-  @Input() type: string = 'Piñata'; // Default Fashion
+  @Input() collection: string = 'Piñata'; // Default Fashion
 
   public products: Product[] = [];
 
@@ -20,8 +20,8 @@ export class ProductBoxVerticalSliderComponent implements OnInit {
 
   constructor(public productService: ProductService) {
     this.productService.getProducts.subscribe(response => {
-      if (this.type !== 'All')
-        this.products = response.filter(item => item.type == this.type && item.new)
+      if (this.collection !== 'All')
+        this.products = response.filter(item => item.collection == this.collection && item.new)
       else
         this.products = response;
     });
