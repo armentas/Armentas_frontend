@@ -6,6 +6,7 @@ export interface Order {
     product?: Product[];
     orderId?: any;
     totalAmount?: any;
+    shippingAmount?: any;
 }
 
 export interface Buyer {

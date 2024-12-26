@@ -1586,7 +1586,8 @@ header {
 @media (max-width: 480px) {
     .brand-logo {
         img {
-            height: 25px;
+            height: auto;
+            padding: 15px 10px 20px;
         }
     }
 }

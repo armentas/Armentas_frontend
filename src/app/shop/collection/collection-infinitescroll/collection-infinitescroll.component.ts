@@ -14,7 +14,7 @@ import { response } from 'express';
 })
 export class CollectionInfinitescrollComponent implements OnInit {
 
-  public grid: string = 'col-lg-2';
+  public grid: string = 'col-lg-3';
   public layoutView: string = 'grid-view';
   public all_products: any[] = [];
   public all_collections: any[] = [];

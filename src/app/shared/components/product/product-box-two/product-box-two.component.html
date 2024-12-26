@@ -7,7 +7,7 @@
         <a [routerLink]="getProductRoute(product)">
             <img [defaultImage]="ImageSrc ? ImageSrc : 'assets/images/product/placeholder.jpg'" 
                  [lazyLoad]="ImageSrc ? ImageSrc : product.images[0].img_url" 
-                 class="img-fluid lazy-loading" style="height: 350px; width: auto;" alt="">
+                 class="img-fluid lazy-loading product-size"  alt="">
         </a>
 	</div>
 	<div class="cart-box">

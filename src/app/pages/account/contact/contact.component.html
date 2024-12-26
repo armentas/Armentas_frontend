@@ -4,7 +4,9 @@
     <div class="container">
         <div class="row section-b-space">
             <div class="col-lg-7 map">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d50059.12775918716!2d-121.88676468426003!3d37.364739969245164!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1533793756956&q=37.364739969245164,-121.88676468426003" allowfullscreen></iframe>
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d50059.12775918716!2d-121.88676468426003!3d37.364739969245164!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1533793756956&q=37.364739969245164,-121.88676468426003"
+                    allowfullscreen></iframe>
             </div>
             <div class="col-lg-5">
                 <div class="contact-right">
@@ -37,46 +39,67 @@
                                 <p>jcar91888@gmail.com</p>
                             </div>
                         </li>
-                        <!-- <li>
-                            <div class="contact-icon">
-                                <i class="fa fa-fax" aria-hidden="true"></i>
-                                <h6>Fax</h6>
-                            </div>
-                            <div class="media-body">
-                                <p>Support@Shopcart.com</p>
-                                <p>info@shopcart.com</p>
-                            </div>
-                        </li> -->
                     </ul>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <form class="theme-form">
+                <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)" class="theme-form">
                     <div class="row">
                         <div class="col-md-6">
                             <label for="name">First Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Enter Your name" required="">
+                            <input type="text" class="form-control" id="name" name="firstName"
+                                placeholder="Enter Your First Name" [(ngModel)]="formData.firstName" required
+                                minlength="2" #firstName="ngModel" />
+                            <div *ngIf="firstName.invalid && firstName.touched">
+                                <small class="text-danger">First name is required (min 2 characters).</small>
+                            </div>
                         </div>
+
                         <div class="col-md-6">
-                            <label for="email">Last Name</label>
-                            <input type="text" class="form-control" id="last-name" placeholder="Email" required="">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName"
+                                placeholder="Enter Your Last Name" [(ngModel)]="formData.lastName" required
+                                minlength="2" #lastName="ngModel" />
+                            <div *ngIf="lastName.invalid && lastName.touched">
+                                <small class="text-danger">Last name is required (min 2 characters).</small>
+                            </div>
                         </div>
+
                         <div class="col-md-6">
-                            <label for="review">Phone number</label>
-                            <input type="text" class="form-control" id="review" placeholder="Enter your number" required="">
+                            <label for="phone">Phone Number</label>
+                            <input type="text" class="form-control" id="phone" name="phone"
+                                placeholder="Enter Your Phone Number" [(ngModel)]="formData.phone" required
+                                pattern="^[0-9]*$" #phone="ngModel" />
+                            <div *ngIf="phone.invalid && phone.touched">
+                                <small class="text-danger">Phone number must be numeric.</small>
+                            </div>
                         </div>
+
                         <div class="col-md-6">
                             <label for="email">Email</label>
-                            <input type="text" class="form-control" id="email" placeholder="Email" required="">
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="Enter Your Email" [(ngModel)]="formData.email" required #email="ngModel" />
+                            <div *ngIf="email.invalid && email.touched">
+                                <small class="text-danger">Please enter a valid email.</small>
+                            </div>
                         </div>
+
                         <div class="col-md-12">
-                            <label for="review">Write Your Message</label>
-                            <textarea class="form-control" placeholder="Write Your Message" id="exampleFormControlTextarea1" rows="6"></textarea>
+                            <label for="message">Write Your Message</label>
+                            <textarea class="form-control" id="message" name="message" placeholder="Write Your Message"
+                                rows="6" [(ngModel)]="formData.message" required minlength="10"
+                                #message="ngModel"></textarea>
+                            <div *ngIf="message.invalid && message.touched">
+                                <small class="text-danger">Message must be at least 10 characters long.</small>
+                            </div>
                         </div>
+
                         <div class="col-md-12">
-                            <button class="btn btn-solid" type="submit">Send Your Message</button>
+                            <button class="btn btn-solid" type="submit" [disabled]="contactForm.invalid">
+                                Send Your Message
+                            </button>
                         </div>
                     </div>
                 </form>

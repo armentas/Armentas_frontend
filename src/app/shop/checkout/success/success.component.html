@@ -68,12 +68,12 @@
                     <div class="total-sec">
                         <ul>
                             <li>Subtotal <span>{{ orderDetails.totalAmount | currency:productService?.Currency.currency:'symbol' }}</span></li>
-                            <li>Shipping <span>$00.00</span></li>
-                            <li>Tax <span>$00.00</span></li>
+                            <li>Shipping <span>{{ orderDetails.shippingAmount | currency:productService?.Currency.currency:'symbol' }}</span></li>
+                            <!-- <li>Tax <span>$00.00</span></li> -->
                         </ul>
                     </div>
                     <div class="final-total">
-                        <h3>total <span>{{ orderDetails.totalAmount | currency:productService?.Currency.currency:'symbol' }}</span></h3>
+                        <h3>total <span>{{ total | currency:productService?.Currency.currency:'symbol' }}</span></h3>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                         <ul class="order-detail">
                             <li>order ID: {{ orderDetails.orderId }}</li>
                             <li>Order Date: {{ today }}</li>
-                            <li>Order Total: {{ orderDetails.totalAmount | currency:productService?.Currency.currency:'symbol' }}</li>
+                            <li>Order Total: {{ total | currency:productService?.Currency.currency:'symbol' }}</li>
                         </ul>
                     </div>
                     <div class="col-sm-6">

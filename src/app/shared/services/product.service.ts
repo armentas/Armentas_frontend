@@ -21,6 +21,7 @@ export class ProductService {
   public Currency = { name: 'Dollar', currency: 'USD', price: 1 } // Default Currency
   public OpenCart: boolean = false;
   public Products
+  public shipCost: number = 5.40
 
   constructor(private http: HttpClient,
     private toastrService: ToastrService) { }
@@ -241,6 +242,15 @@ export class ProductService {
     }));
   }
 
+  //Shipping Amount
+  public shippingTotalAmount(): Observable<number> {
+    return this.cartItems.pipe(map((product: Product[]) => {
+      return parseFloat(product.reduce((prev, curr: Product) => {
+        return (prev + curr.weight * this.shipCost) * this.Currency.price;
+      }, 0).toFixed(2));
+    }));
+  }
+  
   /*
     ---------------------------------------------
     ------------  Filter Product  ---------------

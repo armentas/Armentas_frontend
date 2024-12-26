@@ -28,6 +28,9 @@ export class CheckoutComponent implements OnInit {
 
   public payment: string = 'Stripe';
   public amount: any;
+  public shippingAmount: any;
+  public total: any;
+
   elements: any;
   clientId: string;
 
@@ -53,6 +56,7 @@ export class CheckoutComponent implements OnInit {
     private router: Router,
     config: NgbModalConfig) {
     this.checkoutForm = this.fb.group({
+      email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]],
       fullname: ['', [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]+[a-zA-Z]$')]],
       phone: ['', [Validators.required, Validators.pattern('[0-9]+')]],
       address: ['', [Validators.required, Validators.maxLength(50)]],
@@ -71,8 +75,12 @@ export class CheckoutComponent implements OnInit {
     this.productService.cartItems.subscribe(response => {
       this.products = response      
     });
-    this.getTotal.subscribe(amount => this.amount = amount);
-    this.initConfig();    
+    this.getsubTotal.subscribe(amount => this.amount = amount);
+    this.getShippingTotal.subscribe(shipAmount => this.shippingAmount = shipAmount);
+
+    this.total = this.amount + this.shippingAmount
+    
+    // this.initConfig();    
 
     this.checkPayStatus()
   }
@@ -82,18 +90,22 @@ export class CheckoutComponent implements OnInit {
     this.modalService.open(content, { centered: true, size: 'lg' });
   }
 
-  public get getTotal(): Observable<number> {
+  public get getsubTotal(): Observable<number> {
     return this.productService.cartTotalAmount();
+  }
+
+  public get getShippingTotal(): Observable<number> {
+    return this.productService.shippingTotalAmount();
   }
 
   // Stripe Payment Gateway
   async initPay() {
     try {
       localStorage.setItem("shippingData", JSON.stringify(this.checkoutForm.value));
+      localStorage.setItem("billingEmail", JSON.stringify(this.checkoutForm.value.email));
       this.openModal();
-      console.log(this.amount);
       
-      const response = await this.apiService.onProceedToPay2(this.amount);
+      const response = await this.apiService.onProceedToPay2(this.total);
       this.clientId = response.clientId;
 
       this.elements = this.stripe.elements({
@@ -170,7 +182,7 @@ export class CheckoutComponent implements OnInit {
 
           await this.apiService.updatePaymentIntentShipping(paymentIntent.id, shippingData)
           
-          this.orderService.createOrder(this.products, this.checkoutForm.value, this.orderIDGenerator(), this.amount);
+          this.orderService.createOrder(this.products, this.checkoutForm.value, this.orderIDGenerator(), this.amount, this.shippingAmount);
           // localStorage.removeItem("cartItems");
           this.router.navigate(['/shop/checkout/success/data'], { queryParams: { client_secret: paymentIntent.client_secret } });
           break;

@@ -204,7 +204,7 @@ export let ProductSlider: any = {
             items: 2
         }, 
         0: {
-            items: 1
+            items: 2
         }
     }
 }

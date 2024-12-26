@@ -15,6 +15,7 @@ import { ApiService } from 'src/app/shared/services/api.service';
 export class SuccessComponent implements OnInit {
 
   public orderDetails: Order = {};
+  public total: number;
   retrievePaymentIntent: any;
   stripe: Stripe;
   today: string;
@@ -23,29 +24,36 @@ export class SuccessComponent implements OnInit {
     private orderService: OrderService, public apiService: ApiService) { }
 
   async ngOnInit() {
-    this.today = new Date().toDateString();
-    this.stripe = await loadStripe(environment.stripe_token);
+    try {
+      const billingEmail = JSON.parse(localStorage.getItem('billingEmail'));
+      this.today = new Date().toDateString();
+      this.stripe = await loadStripe(environment.stripe_token);
 
-    this.orderService.checkoutItems.subscribe(response => {
-      this.orderDetails = response;
-    });
+      this.orderService.checkoutItems.subscribe(response => {
+        this.orderDetails = response;
+      });
 
-    const clientSecret = new URLSearchParams(window.location.search).get("client_secret");
-    if (!clientSecret) {
-      return;
+      this.total = this.orderDetails.totalAmount + this.orderDetails.shippingAmount;
+
+      const clientSecret = new URLSearchParams(window.location.search).get("client_secret");
+      if (!clientSecret) {
+        return;
+      }
+
+      this.retrievePaymentIntent = await this.stripe.retrievePaymentIntent(clientSecret);
+
+      const { paymentMethod } = await this.apiService.getPaymentMethod(this.retrievePaymentIntent.paymentIntent.payment_method);
+
+      await this.saveOrder(billingEmail, paymentMethod.billing_details.name, paymentMethod.billing_details.phone, paymentMethod.type);
+
+      this.cleanCart();
+    } catch (error) {
+      console.log(error);
+
     }
-
-    this.retrievePaymentIntent = await this.stripe.retrievePaymentIntent(clientSecret);
-
-    const { paymentMethod } = await this.apiService.getPaymentMethod(this.retrievePaymentIntent.paymentIntent.payment_method);
-
-    await this.saveOrder(paymentMethod.billing_details.name, paymentMethod.billing_details.phone, paymentMethod.type);
-
-    this.cleanCart();
-
   }
 
-  cleanCart(){
+  cleanCart() {
     const items = JSON.parse(localStorage.getItem("cartItems"));
 
     for (let i = 0; i < items.length; i++) {
@@ -63,13 +71,13 @@ export class SuccessComponent implements OnInit {
     return futureDate.toDateString();
   }
 
-  async saveOrder(billingName: string, billingPhone: string, paymentType: string) {
+  async saveOrder(billingEmail: string, billingName: string, billingPhone: string, paymentType: string) {
     try {
       const paymentIntent = this.retrievePaymentIntent.paymentIntent;
 
       const result = await Promise.all(this.orderDetails.product.map(async (prod) => {
         const newOrder = {
-          site_name: 'Armentas Distribution-Shop',
+          site_name: 'PinArtes',
           site_order_id: this.orderDetails.orderId,
           buyer: billingName,
           phone: billingPhone,
@@ -97,10 +105,64 @@ export class SuccessComponent implements OnInit {
           promotional_code: ''
         }
         await this.apiService.saveOrder(newOrder);
+
+        // Actualizar el stock de cada uno de los productos
+        await this.updateStock(newOrder.sku, newOrder.quantity);
+
       }));
+
+      // Enviar mensaje de Confirmacion de Orden
+      await this.sendOrderConfirmation(billingEmail, billingName, billingPhone, paymentType)
 
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async sendOrderConfirmation(billingEmail: string, billingName: string, billingPhone: string, paymentType: string) {
+    try {
+      const data = {
+        "email": billingEmail,
+        "fullOrder": {
+          "site_name": "PinArtes",
+          "site_order_id": this.orderDetails.orderId,
+          "buyer": billingName,
+          "phone": billingPhone,
+          "order_date": new Date().toISOString().slice(0, 19).replace('T', ' '),
+          "order_total": this.orderDetails.totalAmount,
+          "shipping_amount": this.orderDetails.shippingAmount,
+          "shipping_status": "Awaiting shipment",
+          "street_1": this.retrievePaymentIntent.paymentIntent.shipping.address.line1,
+          "shipping_city": this.retrievePaymentIntent.paymentIntent.shipping.address.city,
+          "shipping_postal_code": this.retrievePaymentIntent.paymentIntent.shipping.address.postal_code,
+          "shipping_state_province": this.retrievePaymentIntent.paymentIntent.shipping.address.state,
+          "shipping_country": this.retrievePaymentIntent.paymentIntent.shipping.address.country,
+          "shipping_target_name": this.retrievePaymentIntent.paymentIntent.shipping.name,
+          "shipping_target_phone": this.retrievePaymentIntent.paymentIntent.shipping.phone,
+          "payment_type": paymentType,
+          "product": this.orderDetails.product
+        }
+      }
+
+      await this.apiService.sendOrderConfirmation(data);
+
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
+  async updateStock(sku: string, quantity: number) {
+    try {
+      const { data } = await this.apiService.getProductbySKU(sku);
+
+      if (data.length > 0)
+        await this.apiService.updateProductStock(data[0].id, data[0].stock - quantity);
+
+    } catch (error) {
+      console.log(error);
+
+    }
+
   }
 }

@@ -38,7 +38,7 @@
 						<div class="footer-logo">
 							<img [src]="themeLogo" style="width: 200px;" alt="logo">
 						</div>
-						<p>Welcome to Armentas! At Armentas, we take pride in offering you an authentic Mexican
+						<p>Welcome to PinArtes! At PinArtes, we take pride in offering you an authentic Mexican
 							experience through our selection of unique and traditional products. Explore our website and
 							uncover a wide variety of handmade crafts, and more.</p>
 						<!-- <div class="footer-social">
@@ -70,9 +70,7 @@
 						</div>
 						<div class="footer-contant">
 							<ul>
-								<li><a routerLink="/shop/collection/infinitescroll" [queryParams]="{ type: 'Piñata' }">Piñatas</a></li>
-								<li><a routerLink="/shop/collection/infinitescroll" [queryParams]="{ type: 'Piggy bank' }">Piggy bank</a></li>
-								<li><a routerLink="/shop/collection/infinitescroll" [queryParams]="{ type: 'All' }">All</a></li>
+								<li *ngFor="let collection of all_collections"><a routerLink="/shop/collection/infinitescroll" [queryParams]="{ collection: collection.name }">{{collection.name}}</a></li>
 							</ul>
 						</div>
 					</div>

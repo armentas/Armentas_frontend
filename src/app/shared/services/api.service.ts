@@ -78,4 +78,23 @@ export class ApiService {
   public get getAllCategories(): Observable<Category[]> {
     return from(this.categories());
   }
+
+   /* ----------------------- Mailer -------------------- */
+   sendOrderConfirmation(data: any): any {
+    return lastValueFrom(this.http.post(`${environment.baseUrl}/sendMailer/sendMailorderConfirmation`, data));
+  }
+
+  sendMessage(data: any): any {
+    return lastValueFrom(this.http.post(`${environment.baseUrl}/sendMailer/sendNewMessageNotification`, data));
+  }
+
+  /*------------------------- Product --------------------- */
+  
+  getProductbySKU(sku: string): any {
+    return lastValueFrom(this.http.get(`${environment.baseUrl}/products/getProductbySKU/${sku}`));
+  }
+
+  updateProductStock(id: number, newStock: number): any {
+    return lastValueFrom(this.http.put(`${environment.baseUrl}/products/updateProduct/${id}`, {stock: newStock}));
+  }
 }
