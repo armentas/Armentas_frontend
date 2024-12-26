@@ -44,7 +44,7 @@ export class SuccessComponent implements OnInit {
 
       const { paymentMethod } = await this.apiService.getPaymentMethod(this.retrievePaymentIntent.paymentIntent.payment_method);
 
-      await this.saveOrder(billingEmail, paymentMethod.billing_details.name, paymentMethod.billing_details.phone, paymentMethod.type);
+      await this.saveOrder(billingEmail, paymentMethod.billing_details.name, paymentMethod.type);
 
       this.cleanCart();
     } catch (error) {
@@ -71,7 +71,7 @@ export class SuccessComponent implements OnInit {
     return futureDate.toDateString();
   }
 
-  async saveOrder(billingEmail: string, billingName: string, billingPhone: string, paymentType: string) {
+  async saveOrder(billingEmail: string, billingName: string, paymentType: string) {
     try {
       const paymentIntent = this.retrievePaymentIntent.paymentIntent;
 
@@ -80,7 +80,7 @@ export class SuccessComponent implements OnInit {
           site_name: 'PinArtes',
           site_order_id: this.orderDetails.orderId,
           buyer: billingName,
-          phone: billingPhone,
+          contact: billingEmail,
           sku: prod.sku,
           order_date: new Date().toISOString().slice(0, 19).replace('T', ' '),
           order_total: this.orderDetails.totalAmount,
@@ -112,14 +112,14 @@ export class SuccessComponent implements OnInit {
       }));
 
       // Enviar mensaje de Confirmacion de Orden
-      await this.sendOrderConfirmation(billingEmail, billingName, billingPhone, paymentType)
+      await this.sendOrderConfirmation(billingEmail, billingName, paymentType)
 
     } catch (error) {
       console.log(error);
     }
   }
 
-  async sendOrderConfirmation(billingEmail: string, billingName: string, billingPhone: string, paymentType: string) {
+  async sendOrderConfirmation(billingEmail: string, billingName: string, paymentType: string) {
     try {
       const data = {
         "email": billingEmail,
@@ -127,7 +127,7 @@ export class SuccessComponent implements OnInit {
           "site_name": "PinArtes",
           "site_order_id": this.orderDetails.orderId,
           "buyer": billingName,
-          "phone": billingPhone,
+          "contact": billingEmail,
           "order_date": new Date().toISOString().slice(0, 19).replace('T', ' '),
           "order_total": this.orderDetails.totalAmount,
           "shipping_amount": this.orderDetails.shippingAmount,
