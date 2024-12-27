@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, from, lastValueFrom } from 'rxjs';
-import { map, startWith, delay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from '../classes/product';
 import { environment } from 'src/environments/environment';
@@ -81,7 +81,7 @@ export class ProductService {
     const differenceInMs = currentDate.getTime() - date.getTime();
     const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
 
-    return differenceInDays < 5;
+    return differenceInDays < 30;
   }
 
 
