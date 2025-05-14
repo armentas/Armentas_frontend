@@ -17,10 +17,11 @@ export class TypesComponent implements OnInit, AfterViewInit {
   public collapse: boolean = true;
   public activeCollection: string;
 
-  constructor(public productService: ProductService, private route: ActivatedRoute, private apiService: ApiService) { 
+  constructor(public productService: ProductService, private route: ActivatedRoute, private apiService: ApiService) {
     // this.productService.getProducts.subscribe(product => this.products = product);
-    this.apiService.getAllCollections.subscribe( response => {
-      this.all_collections = response  });
+    this.apiService.getAllCollections.subscribe(response => {
+      this.all_collections = response
+    });
   }
 
   ngOnInit(): void {
@@ -28,11 +29,9 @@ export class TypesComponent implements OnInit, AfterViewInit {
 
   get filterbyCollection() {
     // const collection = [...new Set(this.products.map(product => product.collection))]
-    const collection = this.all_collections.map(col => {
-      if(col.code == 'GG')
-        return 'All';
-      return col.name;
-    })
+    const collection = this.all_collections
+      .filter(col => col.active !== 0)
+      .map(col => col.code === 'GG' ? 'All' : col.name);
     return collection
   }
 

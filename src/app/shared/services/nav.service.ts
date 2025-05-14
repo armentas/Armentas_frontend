@@ -66,7 +66,7 @@ export class NavService {
 		// Obtén las primeras cuatro colecciones del servicio CollectionService
 		this.apiService.getAllCollections.subscribe((collections) => {
 			const basicCollectionsFilteres = collections.filter((collection) => {
-				return !this.basicCollections.includes(collection.name) && collection.code !== 'GG';
+				return !this.basicCollections.includes(collection.name) && collection.code !== 'GG' && collection.active !== 0;
 			});
 
 			const basicMenuItems = basicCollectionsFilteres.map((collection) => {
