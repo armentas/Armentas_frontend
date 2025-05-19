@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ProductService } from "../../services/product.service";
 import { Product } from "../../classes/product";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -14,8 +15,10 @@ export class SettingsComponent implements OnInit {
 
   public products: Product[] = [];
   public search: boolean = false;
-  
-  public languages = [{ 
+
+  searchInput: string = '';
+
+  public languages = [{
     name: 'English',
     code: 'en'
   }, {
@@ -43,18 +46,19 @@ export class SettingsComponent implements OnInit {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object,
     private translate: TranslateService,
-    public productService: ProductService) {
+    public productService: ProductService,
+    private router: Router) {
     this.productService.cartItems.subscribe(response => this.products = response);
   }
 
   ngOnInit(): void {
   }
 
-  searchToggle(){
+  searchToggle() {
     this.search = !this.search;
   }
 
-  changeLanguage(code){
+  changeLanguage(code) {
     if (isPlatformBrowser(this.platformId)) {
       this.translate.use(code)
     }
@@ -77,6 +81,18 @@ export class SettingsComponent implements OnInit {
     const code = product.sku || ''; // Asegurándonos de que code tenga un valor
     // return `/shop/product/left/sidebar/${cleanedTitle}-${code}`;
     return `/shop/product/left/sidebar/${cleanedTitle}-${code}`;
+  }
+
+  searchProduct() {
+    if (this.searchInput != '') {
+      // Construye la URL con el parámetro de consulta
+      const rutaConQueryParam = '/shop/collection/infinitescroll';
+      const queryParams = { search: this.searchInput };
+
+      // Navega a la ruta con el parámetro de consulta
+      this.router.navigate([rutaConQueryParam], { queryParams: queryParams });
+      this.searchToggle();
+    }
   }
 
 }

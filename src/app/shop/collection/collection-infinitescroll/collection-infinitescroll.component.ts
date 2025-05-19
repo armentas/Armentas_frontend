@@ -14,7 +14,7 @@ import { response } from 'express';
 })
 export class CollectionInfinitescrollComponent implements OnInit {
 
-  public grid: string = 'col-lg-3';
+  public grid: string = 'col-lg-3 col-6';
   public layoutView: string = 'grid-view';
   public all_products: any[] = [];
   public all_collections: any[] = [];
@@ -30,6 +30,7 @@ export class CollectionInfinitescrollComponent implements OnInit {
   public pageNo: number = 1;
   public paginate: any = {}; // Pagination use only
   public sortBy: string; // Sorting Order
+  public search: string; // Search param
   public mobileSidebar: boolean = false;
   public loader: boolean = true;
   public finished: boolean = false  // boolean when end of data is reached
@@ -40,10 +41,10 @@ export class CollectionInfinitescrollComponent implements OnInit {
   public collectionDescription: string = '';
 
   loading: boolean = false;
-  
+
 
   constructor(private route: ActivatedRoute, private router: Router,
-    private viewScroller: ViewportScroller, public productService: ProductService, private apiService: ApiService) {  }
+    private viewScroller: ViewportScroller, public productService: ProductService, private apiService: ApiService) { }
 
   ngOnInit() {
     // Get Query params..
@@ -58,6 +59,7 @@ export class CollectionInfinitescrollComponent implements OnInit {
       this.maxPrice = params.maxPrice ? params.maxPrice : this.maxPrice;
       this.tags = [...this.categories, ...this.colors]; // All Tags Array
       this.collection = params.collection ? params.collection : null;
+      this.search = params.search ? params.search : null;
       this.sortBy = params.sortBy ? params.sortBy : 'ascending';
 
       // Get Filtered Products..
@@ -78,20 +80,28 @@ export class CollectionInfinitescrollComponent implements OnInit {
         // Price Filter
         this.all_products = this.all_products.filter(item => item.price >= this.minPrice && item.price <= this.maxPrice)
 
+        // Search Filter
+        if (this.search) {
+          const searchTerm = this.search.toLowerCase();
+          this.all_products = this.all_products.filter(item =>
+            item.title?.toLowerCase().includes(searchTerm)
+          );
+        }
+
         this.addItems();
         this.loading = false;
-      },error => {
+      }, error => {
         // Manejo de error
         console.error(error);
         this.loading = false;
       })
     });
 
-    this.apiService.getAllCollections.subscribe( response => {
-      this.all_collections = response;      
+    this.apiService.getAllCollections.subscribe(response => {
+      this.all_collections = response;
 
       this.route.queryParams.subscribe(params => {
-        if (params.collection !== 'All') {        
+        if (params.collection !== 'All' && !params.search) {
           const coll = this.all_collections.filter(col => col.name === params.collection);
           console.log(this.all_collections);
           this.collectionBanner = coll[0].image;
@@ -194,9 +204,9 @@ export class CollectionInfinitescrollComponent implements OnInit {
   updateLayoutView(value: string) {
     this.layoutView = value;
     if (value == 'list-view')
-      this.grid = 'col-lg-12';
+      this.grid = 'col-lg-12 col-6';
     else
-      this.grid = 'col-xl-3 col-md-6';
+      this.grid = 'col-xl-3 col-6';
   }
 
   // Mobile sidebar

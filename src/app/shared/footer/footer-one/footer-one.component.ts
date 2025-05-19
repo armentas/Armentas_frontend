@@ -25,7 +25,7 @@ export class FooterOneComponent implements OnInit {
             name:'All'
         }
         return col;
-      })  });
+      }).filter( co => co.active !== 0 )  });
   }
 
 }

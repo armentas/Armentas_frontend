@@ -11,13 +11,13 @@
             <div class="overlay-content">
                 <div class="container">
                     <div class="row">
-                        <div class="col-xl-12">
-                            <form>
-                                <div class="form-group">
-                                    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Search a Product">
+                        <div class="col-12">
+                            <div class="search_form">
+                                <div class="form-group ms-3">
+                                    <input type="text" class="form-control" id="search" placeholder="Search a Product" [(ngModel)]="searchInput">
                                 </div>
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                            </form>
+                                <span class="lupa streamline--magnifying-glass me-3" (click)="searchProduct()"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
