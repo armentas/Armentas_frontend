@@ -83,16 +83,17 @@ export class SettingsComponent implements OnInit {
     return `/shop/product/left/sidebar/${cleanedTitle}-${code}`;
   }
 
-  searchProduct() {
-    if (this.searchInput != '') {
-      // Construye la URL con el parámetro de consulta
-      const rutaConQueryParam = '/shop/collection/infinitescroll';
-      const queryParams = { search: this.searchInput };
+  searchProduct(event?: KeyboardEvent) {
+  // Si existe evento y no es Enter, salimos
+  if (event && event.key !== 'Enter') return;
 
-      // Navega a la ruta con el parámetro de consulta
-      this.router.navigate([rutaConQueryParam], { queryParams: queryParams });
-      this.searchToggle();
-    }
+  if (this.searchInput && this.searchInput.trim() !== '') {
+    const rutaConQueryParam = '/shop/collection/infinitescroll';
+    const queryParams = { search: this.searchInput.trim() };
+
+    this.router.navigate([rutaConQueryParam], { queryParams });
+    this.searchToggle();
   }
+}
 
 }

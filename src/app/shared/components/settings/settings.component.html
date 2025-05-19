@@ -14,7 +14,7 @@
                         <div class="col-12">
                             <div class="search_form">
                                 <div class="form-group ms-3">
-                                    <input type="text" class="form-control" id="search" placeholder="Search a Product" [(ngModel)]="searchInput">
+                                    <input type="text" class="form-control" id="search" placeholder="Search a Product" [(ngModel)]="searchInput" (keydown)="searchProduct($event)">
                                 </div>
                                 <span class="lupa streamline--magnifying-glass me-3" (click)="searchProduct()"></span>
                             </div>
